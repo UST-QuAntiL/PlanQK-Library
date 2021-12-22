@@ -1,4 +1,4 @@
-package Properties;
+package properties;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public class PropertyService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertyService.class);
-    private static Properties serverProperties = loadProperties();
+    private static final Properties serverProperties = loadProperties();
 
     private static Properties loadProperties() {
         try (InputStream stream = PropertyService.class.getClassLoader().getResourceAsStream("config.properties")){
@@ -19,7 +19,7 @@ public class PropertyService {
             return properties;
         } catch (IOException e) {
             LOGGER.error("Cannot load configuration file.");
-            return null;
+            throw new RuntimeException("Cannot load properties file.");
         }
     }
 

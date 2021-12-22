@@ -1,6 +1,6 @@
 import java.net.URI;
 
-import Properties.PropertyService;
+import properties.PropertyService;
 import jakarta.ws.rs.core.UriBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +16,7 @@ public class JabRefServer {
 
         URI baseUri = UriBuilder.fromUri(serverUri).build();
         ResourceConfig config = ResourceConfig.forApplicationClass(JabRefAPI.class);
+        // TODO: Change deployment
         JdkHttpServerFactory.createHttpServer(baseUri, config);
         LOGGER.info("Http Server running at {}", serverUri);
     }
