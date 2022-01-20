@@ -2,15 +2,22 @@ package properties;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PropertyService {
+    private static PropertyService instance;
+    private final Properties serverProperties;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertyService.class);
-    private static final Properties serverProperties = loadProperties();
+
+    private PropertyService() {
+        serverProperties = loadProperties();
+    }
 
     private static Properties loadProperties() {
         try (InputStream stream = PropertyService.class.getClassLoader().getResourceAsStream("config.properties")){
@@ -23,11 +30,18 @@ public class PropertyService {
         }
     }
 
-    public static String getServerUri() {
+    public String getServerUri() {
         return serverProperties.getProperty("serverUri");
     }
 
-    public static String getWorkingDirectory() {
-        return serverProperties.getProperty("workingDirectory");
+    public Path getWorkingDirectory() {
+        return Paths.get(serverProperties.getProperty("workingDirectory"));
+    }
+
+    public static PropertyService getInstance() {
+        if (instance == null) {
+            instance = new PropertyService();
+        }
+        return instance;
     }
 }

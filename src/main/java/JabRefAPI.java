@@ -3,6 +3,7 @@ import java.util.Set;
 
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
+import rest.Accumulation;
 import rest.Libraries;
 import rest.Root;
 
@@ -16,6 +17,7 @@ public class JabRefAPI extends Application {
         // Rest endpoints
         resources.add(Root.class);
         resources.add(Libraries.class);
+        resources.add(Accumulation.class);
 
         return resources;
     }

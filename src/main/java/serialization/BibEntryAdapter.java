@@ -1,6 +1,7 @@
 package serialization;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -12,6 +13,8 @@ import org.jabref.model.database.BibDatabaseMode;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.field.Field;
 import org.jabref.model.entry.field.InternalField;
+import org.jabref.model.entry.field.StandardField;
+import org.jabref.model.entry.types.StandardEntryType;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -59,7 +62,26 @@ public class BibEntryAdapter extends TypeAdapter<BibEntry> {
 
     @Override
     public BibEntry read(JsonReader in) throws IOException {
-        // Potential deserializer if required
-        return null;
+        // Create new entry
+        BibEntry deserializedEntry = new BibEntry();
+        in.beginObject();
+        while (in.hasNext()) {
+            String field = in.nextName();
+            switch (field) {
+                case "citekey":
+                    deserializedEntry.withCitationKey(in.nextString());
+                    break;
+                case "entrytype":
+                    deserializedEntry.setType(StandardEntryType.valueOf(in.nextString()));
+                    break;
+                default:
+                    StandardField parsedField = Arrays.stream(StandardField.values())
+                                                      .filter(e -> e.name().equalsIgnoreCase(field)).findAny().orElseThrow(IllegalArgumentException::new);
+                    deserializedEntry.withField(parsedField, in.nextString());
+            }
+        }
+        deserializedEntry.setChanged(true);
+        in.endObject();
+        return deserializedEntry;
     }
 }

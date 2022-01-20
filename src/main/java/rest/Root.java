@@ -11,6 +11,6 @@ public class Root {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public String getText() {
-        return "<h1>Test successful</h1>.";
+        return "<h1>Server runs</h1>";
     }
 }

@@ -24,13 +24,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LibraryServiceTest {
     LibraryService libraryService;
+    Path lib1;
+    Path lib2;
 
     @BeforeEach
     public void setupService(@TempDir Path workingDir) throws IOException, URISyntaxException {
         workingDir = Paths.get("C:\\test");
-        this.libraryService = new LibraryService(workingDir);
-        Path lib1 = Paths.get(LibraryServiceTest.class.getClassLoader().getResource("repository/lib1.bib").toURI());
-        Path lib2 = Paths.get(LibraryServiceTest.class.getClassLoader().getResource("repository/lib2.bib").toURI());
+        this.libraryService = LibraryService.getInstance(workingDir);
+        lib1 = Paths.get(LibraryServiceTest.class.getClassLoader().getResource("repository/lib1.bib").toURI());
+        lib2 = Paths.get(LibraryServiceTest.class.getClassLoader().getResource("repository/lib2.bib").toURI());
         Files.copy(lib1, workingDir.resolve("lib1.bib"), StandardCopyOption.REPLACE_EXISTING);
         Files.copy(lib2, workingDir.resolve("lib2.bib"), StandardCopyOption.REPLACE_EXISTING);
         assert Files.exists(workingDir.resolve("lib1.bib"));
@@ -90,6 +92,7 @@ public class LibraryServiceTest {
                 .withField(StandardField.AUTHOR, "Harrer, S. and Lenhard, J. and Dietz, L.")
                 .withField(StandardField.DATE, "2018-03-20")
                 .withField(StandardField.TITLE, "Java by Comparison: Become a Java Craftsman in 70 Examples");
+        // Required to get serialized
         newEntry.setChanged(true);
         libraryService.addEntryToLibrary("lib1", newEntry);
 
@@ -98,6 +101,14 @@ public class LibraryServiceTest {
         currentEntries.sort(Comparator.comparing(o -> o.getCitationKey().orElse("")));
 
         assertEquals(expected, currentEntries);
+    }
+
+    @Test
+    public void getAllEntriesLib1Lib2() throws IOException {
+        List<BibEntry> result = libraryService.getAllEntries();
+        result.sort(Comparator.comparing(o -> o.getCitationKey().orElse("")));
+        assertEquals(6, result.size());
+        assertEquals(getMergedEntries(), result);
     }
 
     private List<BibEntry> getModifiedEntriesLib1() {
@@ -151,5 +162,39 @@ public class LibraryServiceTest {
                 .withField(StandardField.DATE, "2019-12-20")
                 .withField(StandardField.TITLE, "Morphy: A Datamorphic Software Test Automation Tool");
         return List.of(entry1, entry2, entry3, entry4);
+    }
+
+    private List<BibEntry> getMergedEntries() {
+        BibEntry entry1 = new BibEntry(StandardEntryType.InProceedings)
+                .withCitationKey("Kafton2002")
+                .withField(StandardField.AUTHOR, "A. Kafton")
+                .withField(StandardField.DATE, "10-10 Oct. 2002")
+                .withField(StandardField.TITLE, "Wireless SOC testing: Can RF testing costs be reduced?");
+        BibEntry entry2 = new BibEntry(StandardEntryType.InProceedings)
+                .withCitationKey("Nigh2002")
+                .withField(StandardField.AUTHOR, "P. Nigh")
+                .withField(StandardField.DATE, "10-10 Oct. 2002")
+                .withField(StandardField.TITLE, "Scan-based testing: the only practical solution for testing ASIC/consumer products");
+        BibEntry entry3 = new BibEntry(StandardEntryType.Article)
+                .withCitationKey("Saha2018")
+                .withField(StandardField.AUTHOR, "Prashanta Saha and Upulee Kanewala")
+                .withField(StandardField.DATE, "2018-02-20")
+                .withField(StandardField.TITLE, "Fault Detection Effectiveness of Source Test Case Generation Strategies for Metamorphic Testing");
+        BibEntry entry4 = new BibEntry(StandardEntryType.Article)
+                .withCitationKey("Sanchez2016")
+                .withField(StandardField.AUTHOR, "Jimi Sanchez")
+                .withField(StandardField.DATE, "2016-06-01")
+                .withField(StandardField.TITLE, "A Review of Pair-wise Testing");
+        BibEntry entry5 = new BibEntry(StandardEntryType.Article)
+                .withCitationKey("Wu2007")
+                .withField(StandardField.AUTHOR, "Cheng-Wen Wu")
+                .withField(StandardField.DATE, "2007-10-25")
+                .withField(StandardField.TITLE, "SOC Testing Methodology and Practice");
+        BibEntry entry6 = new BibEntry(StandardEntryType.Article)
+                .withCitationKey("Zhu2019")
+                .withField(StandardField.AUTHOR, "Hong Zhu and Ian Bayley and Dongmei Liu and Xiaoyu Zheng")
+                .withField(StandardField.DATE, "2019-12-20")
+                .withField(StandardField.TITLE, "Morphy: A Datamorphic Software Test Automation Tool");
+        return List.of(entry1, entry2, entry3, entry4, entry5, entry6);
     }
 }
