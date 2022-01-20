@@ -12,7 +12,7 @@ public class JabRefServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(JabRefServer.class);
 
     public static void main(String[] args) {
-        String serverUri = PropertyService.getInstance().getServerUri();;
+        String serverUri = PropertyService.getInstance().getServerUri();
 
         URI baseUri = UriBuilder.fromUri(serverUri).build();
         ResourceConfig config = ResourceConfig.forApplicationClass(JabRefAPI.class);
