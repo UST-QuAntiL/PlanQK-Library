@@ -1,12 +1,6 @@
 plugins {
-    id 'java'
-    id 'application'
     id 'war'
     id 'org.openjfx.javafxplugin' version '0.0.10'
-}
-
-application {
-    mainClass.set("JabRefServer")
 }
 
 group 'org.jabref'
@@ -55,15 +49,13 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
-    // Jersey https://github.com/JabRef/cloudref/blob/master/backend/build.gradle
-    implementation group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '3.0.3'
     implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '3.0.3'
-    implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: '3.0.3'
-    implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-jdk-http', version: '3.0.3'
+    implementation 'org.glassfish.jersey.core:jersey-client:3.0.4'
     implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '3.0.3'
     implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '3.0.3'
     implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '3.0.2'
 
+    implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.0.0'
     implementation group: 'jakarta.activation', name: 'jakarta.activation-api', version: '2.0.1'
     implementation group: 'javax.xml.ws', name: 'jaxws-api', version: '2.3.1'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.9'

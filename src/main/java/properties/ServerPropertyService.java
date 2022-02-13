@@ -30,10 +30,6 @@ public class ServerPropertyService {
         }
     }
 
-    public String getServerUri() {
-        return serverProperties.getProperty("serverUri");
-    }
-
     public Path getWorkingDirectory() {
         return Paths.get(serverProperties.getProperty("workingDirectory"));
     }
