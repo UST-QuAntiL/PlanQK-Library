@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import rest.JabRefAPI;
 
 public class JabRefServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(JabRefServer.class);
