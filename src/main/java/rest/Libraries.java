@@ -2,7 +2,6 @@ package rest;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +21,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import properties.PropertyService;
+import properties.ServerPropertyService;
 import repository.LibraryService;
 import serialization.BibEntryAdapter;
 
@@ -33,7 +32,7 @@ public class Libraries {
     private static final Logger LOGGER = LoggerFactory.getLogger(Libraries.class);
 
     public Libraries() {
-        libraryService = LibraryService.getInstance(PropertyService.getInstance().getWorkingDirectory());
+        libraryService = LibraryService.getInstance(ServerPropertyService.getInstance().getWorkingDirectory());
     }
 
     @GET

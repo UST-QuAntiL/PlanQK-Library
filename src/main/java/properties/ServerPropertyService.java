@@ -9,18 +9,18 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PropertyService {
-    private static PropertyService instance;
+public class ServerPropertyService {
+    private static ServerPropertyService instance;
     private final Properties serverProperties;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PropertyService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServerPropertyService.class);
 
-    private PropertyService() {
+    private ServerPropertyService() {
         serverProperties = loadProperties();
     }
 
-    private static Properties loadProperties() {
-        try (InputStream stream = PropertyService.class.getClassLoader().getResourceAsStream("config.properties")){
+    private Properties loadProperties() {
+        try (InputStream stream = ServerPropertyService.class.getClassLoader().getResourceAsStream("config.properties")){
             Properties properties = new Properties();
             properties.load(stream);
             return properties;
@@ -38,9 +38,9 @@ public class PropertyService {
         return Paths.get(serverProperties.getProperty("workingDirectory"));
     }
 
-    public static PropertyService getInstance() {
+    public static ServerPropertyService getInstance() {
         if (instance == null) {
-            instance = new PropertyService();
+            instance = new ServerPropertyService();
         }
         return instance;
     }
