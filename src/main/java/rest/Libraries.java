@@ -25,7 +25,7 @@ import properties.ServerPropertyService;
 import repository.LibraryService;
 import serialization.BibEntryAdapter;
 
-@Path("Libraries")
+@Path("/Libraries")
 public class Libraries {
     private final LibraryService libraryService;
 

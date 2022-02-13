@@ -1,13 +1,10 @@
+package rest;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
-import rest.Accumulation;
-import rest.Libraries;
-import rest.Root;
 
-@ApplicationPath("/")
 public class JabRefAPI extends Application {
 
     @Override

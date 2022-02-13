@@ -18,11 +18,10 @@ import properties.ServerPropertyService;
 import repository.LibraryService;
 import serialization.BibEntryAdapter;
 
-@Path("all")
+@Path("/all")
 public class Accumulation {
-    private final LibraryService libraryService;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(Accumulation.class);
+    private final LibraryService libraryService;
 
     public Accumulation() {
         LOGGER.info("Create resource....");

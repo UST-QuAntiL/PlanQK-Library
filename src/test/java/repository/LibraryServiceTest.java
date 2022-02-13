@@ -29,7 +29,6 @@ public class LibraryServiceTest {
 
     @BeforeEach
     public void setupService(@TempDir Path workingDir) throws IOException, URISyntaxException {
-        workingDir = Paths.get("C:\\test");
         this.libraryService = LibraryService.getInstance(workingDir);
         lib1 = Paths.get(LibraryServiceTest.class.getClassLoader().getResource("repository/lib1.bib").toURI());
         lib2 = Paths.get(LibraryServiceTest.class.getClassLoader().getResource("repository/lib2.bib").toURI());
@@ -41,7 +40,9 @@ public class LibraryServiceTest {
 
     @Test
     public void getLibraryNames() throws IOException {
-        assertEquals(List.of("lib1.bib", "lib2.bib"), libraryService.getLibraryNames());
+        List<String> sortedNames = libraryService.getLibraryNames();
+        sortedNames.sort(String::compareTo);
+        assertEquals(List.of("lib1.bib", "lib2.bib"), sortedNames);
     }
 
     @Test
