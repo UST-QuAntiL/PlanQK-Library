@@ -28,7 +28,6 @@ import serialization.BibEntryAdapter;
 @Path("/Libraries")
 public class Libraries {
     private final LibraryService libraryService;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(Libraries.class);
 
     public Libraries() {
