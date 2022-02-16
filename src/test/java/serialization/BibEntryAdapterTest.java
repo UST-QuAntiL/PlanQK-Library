@@ -8,6 +8,7 @@ import org.jabref.model.entry.types.StandardEntryType;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import logic.serialization.BibEntryAdapter;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

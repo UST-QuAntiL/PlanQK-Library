@@ -1,4 +1,4 @@
-package repository;
+package logic.repository;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

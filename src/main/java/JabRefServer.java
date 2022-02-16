@@ -1,6 +1,6 @@
 import java.net.URI;
 
-import properties.ServerPropertyService;
+import logic.properties.ServerPropertyService;
 import jakarta.ws.rs.core.UriBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

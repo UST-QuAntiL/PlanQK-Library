@@ -1,4 +1,4 @@
-package serialization;
+package logic.serialization;
 
 import java.io.IOException;
 import java.util.Arrays;

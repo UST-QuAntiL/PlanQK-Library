@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.ws.rs.core.Application;
+import rest.Root;
+import rest.base.Accumulation;
+import rest.base.Libraries;
 
 public class JabRefAPI extends Application {
 
@@ -11,10 +14,8 @@ public class JabRefAPI extends Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();
 
-        // Rest endpoints
+        // Rest root resources
         resources.add(Root.class);
-        resources.add(Libraries.class);
-        resources.add(Accumulation.class);
 
         return resources;
     }
