@@ -1,10 +1,16 @@
 <web-app version="5.0"
          xmlns="https://jakarta.ee/xml/ns/jakartaee">
     <servlet>
-        <servlet-name>rest.JabRefAPI</servlet-name>
+        <servlet-name>PlanQKLibrary</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>org.planqk.library.rest</param-value>
+        </init-param>
     </servlet>
+
     <servlet-mapping>
-        <servlet-name>rest.JabRefAPI</servlet-name>
+        <servlet-name>PlanQKLibrary</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -1,4 +1,4 @@
-package repository;
+package org.planqk.library.core.repository;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -30,8 +30,8 @@ public class LibraryServiceTest {
     @BeforeEach
     public void setupService(@TempDir Path workingDir) throws IOException, URISyntaxException {
         this.libraryService = LibraryService.getInstance(workingDir);
-        lib1 = Paths.get(LibraryServiceTest.class.getClassLoader().getResource("repository/lib1.bib").toURI());
-        lib2 = Paths.get(LibraryServiceTest.class.getClassLoader().getResource("repository/lib2.bib").toURI());
+        lib1 = Paths.get(LibraryServiceTest.class.getClassLoader().getResource("org/planqk/library/core/lib1.bib").toURI());
+        lib2 = Paths.get(LibraryServiceTest.class.getClassLoader().getResource("org/planqk/library/core/lib2.bib").toURI());
         Files.copy(lib1, workingDir.resolve("lib1.bib"), StandardCopyOption.REPLACE_EXISTING);
         Files.copy(lib2, workingDir.resolve("lib2.bib"), StandardCopyOption.REPLACE_EXISTING);
         assert Files.exists(workingDir.resolve("lib1.bib"));

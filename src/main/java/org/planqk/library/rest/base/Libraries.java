@@ -1,4 +1,4 @@
-package rest;
+package org.planqk.library.rest.base;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,14 +21,12 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import properties.ServerPropertyService;
-import repository.LibraryService;
-import serialization.BibEntryAdapter;
+import org.planqk.library.core.properties.ServerPropertyService;
+import org.planqk.library.core.repository.LibraryService;
+import org.planqk.library.core.serialization.BibEntryAdapter;
 
-@Path("/Libraries")
 public class Libraries {
     private final LibraryService libraryService;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(Libraries.class);
 
     public Libraries() {

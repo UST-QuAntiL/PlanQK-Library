@@ -1,4 +1,4 @@
-package repository;
+package org.planqk.library.core.repository;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,15 +13,18 @@ import java.util.stream.Collectors;
 
 import org.jabref.logic.database.DatabaseMerger;
 import org.jabref.logic.exporter.AtomicFileWriter;
+import org.jabref.logic.exporter.BibWriter;
 import org.jabref.logic.exporter.BibtexDatabaseWriter;
 import org.jabref.logic.exporter.SavePreferences;
 import org.jabref.logic.importer.OpenDatabase;
+import org.jabref.logic.util.OS;
 import org.jabref.model.database.BibDatabase;
 import org.jabref.model.database.BibDatabaseContext;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.BibEntryTypesManager;
 import org.jabref.model.util.DummyFileUpdateMonitor;
 import org.jabref.model.util.FileUpdateMonitor;
+import org.jabref.preferences.GeneralPreferences;
 import org.jabref.preferences.JabRefPreferences;
 
 import org.slf4j.Logger;
@@ -69,7 +72,7 @@ public class LibraryService {
             throw new FileNotFoundException();
         }
         // We do not need any update monitoring
-        return new ArrayList<>(OpenDatabase.loadDatabase(libraryPath, JabRefPreferences.getInstance().getImportFormatPreferences(), new DummyFileUpdateMonitor())
+        return new ArrayList<>(OpenDatabase.loadDatabase(libraryPath, JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), new DummyFileUpdateMonitor())
                                            .getDatabase()
                                            .getEntries());
     }
@@ -81,7 +84,7 @@ public class LibraryService {
         }
         // Note that this might lead to issues if multiple entries have the same cite key!
         // We do not need any update monitoring
-        return OpenDatabase.loadDatabase(libraryPath, JabRefPreferences.getInstance().getImportFormatPreferences(), new DummyFileUpdateMonitor())
+        return OpenDatabase.loadDatabase(libraryPath, JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), new DummyFileUpdateMonitor())
                            .getDatabase()
                            .getEntryByCitationKey(citeKey);
     }
@@ -93,14 +96,16 @@ public class LibraryService {
             Files.createFile(libraryPath);
             context = new BibDatabaseContext(new BibDatabase());
         } else {
-            context = OpenDatabase.loadDatabase(libraryPath, JabRefPreferences.getInstance().getImportFormatPreferences(), new DummyFileUpdateMonitor())
+            context = OpenDatabase.loadDatabase(libraryPath, JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), new DummyFileUpdateMonitor())
                                   .getDatabaseContext();
         }
         context.getDatabase().insertEntry(newEntry);
+        GeneralPreferences generalPreferences = JabRefPreferences.getInstance().getGeneralPreferences();
         SavePreferences savePreferences = JabRefPreferences.getInstance().getSavePreferences();
 
-        try (AtomicFileWriter fileWriter = new AtomicFileWriter(libraryPath, savePreferences.getEncoding(), savePreferences.shouldMakeBackup())) {
-            BibtexDatabaseWriter databaseWriter = new BibtexDatabaseWriter(fileWriter, savePreferences, new BibEntryTypesManager());
+        try (AtomicFileWriter fileWriter = new AtomicFileWriter(libraryPath, context.getMetaData().getEncoding().orElse(generalPreferences.getDefaultEncoding()), savePreferences.shouldMakeBackup())) {
+            BibWriter writer = new BibWriter(fileWriter, OS.NEWLINE);
+            BibtexDatabaseWriter databaseWriter = new BibtexDatabaseWriter(writer, JabRefPreferences.getInstance().getGeneralPreferences(), savePreferences, new BibEntryTypesManager());
             databaseWriter.saveDatabase(context);
         }
     }
@@ -111,7 +116,7 @@ public class LibraryService {
         if (!Files.exists(libraryPath)) {
             return false;
         } else {
-            context = OpenDatabase.loadDatabase(libraryPath, JabRefPreferences.getInstance().getImportFormatPreferences(), new DummyFileUpdateMonitor())
+            context = OpenDatabase.loadDatabase(libraryPath, JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), new DummyFileUpdateMonitor())
                                   .getDatabaseContext();
         }
         Optional<BibEntry> entry = context.getDatabase().getEntryByCitationKey(citeKey);
@@ -120,10 +125,12 @@ public class LibraryService {
         }
 
         context.getDatabase().removeEntry(entry.get());
+        GeneralPreferences generalPreferences = JabRefPreferences.getInstance().getGeneralPreferences();
         SavePreferences savePreferences = JabRefPreferences.getInstance().getSavePreferences();
 
-        try (AtomicFileWriter fileWriter = new AtomicFileWriter(libraryPath, savePreferences.getEncoding(), savePreferences.shouldMakeBackup())) {
-            BibtexDatabaseWriter databaseWriter = new BibtexDatabaseWriter(fileWriter, savePreferences, new BibEntryTypesManager());
+        try (AtomicFileWriter fileWriter = new AtomicFileWriter(libraryPath, context.getMetaData().getEncoding().orElse(generalPreferences.getDefaultEncoding()), savePreferences.shouldMakeBackup())) {
+            BibWriter writer = new BibWriter(fileWriter, OS.NEWLINE);
+            BibtexDatabaseWriter databaseWriter = new BibtexDatabaseWriter(writer, generalPreferences, savePreferences, new BibEntryTypesManager());
             databaseWriter.saveDatabase(context);
             return true;
         }
@@ -142,7 +149,7 @@ public class LibraryService {
                     .map(path -> {
                         try {
                             LOGGER.info("Opening database...");
-                            return OpenDatabase.loadDatabase(path, JabRefPreferences.getInstance().getImportFormatPreferences(), dummy).getDatabase();
+                            return OpenDatabase.loadDatabase(path, JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), dummy).getDatabase();
                         } catch (IOException e) {
                             // Just return an empty database, a.k.a if opening fails, ignore it
                             return new BibDatabase();

@@ -1,4 +1,4 @@
-package serialization;
+package org.planqk.library.core.serialization;
 
 import java.io.IOException;
 import java.util.Arrays;

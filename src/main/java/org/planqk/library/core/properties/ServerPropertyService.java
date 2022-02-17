@@ -1,4 +1,4 @@
-package properties;
+package org.planqk.library.core.properties;
 
 import java.io.IOException;
 import java.io.InputStream;
