@@ -23,6 +23,9 @@ public class ServerPropertyService {
         try (InputStream stream = ServerPropertyService.class.getClassLoader().getResourceAsStream("config.properties")){
             Properties properties = new Properties();
             properties.load(stream);
+            if(properties.getProperty("workingDirectory") == null || properties.getProperty("workingDirectory").isBlank()) {
+                properties.setProperty("workingDirectory", System.getProperty("user.home") + "/planqk-library");
+            }
             return properties;
         } catch (IOException e) {
             LOGGER.error("Cannot load configuration file.");

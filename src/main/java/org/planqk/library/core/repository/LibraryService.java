@@ -38,6 +38,14 @@ public class LibraryService {
 
     private LibraryService(Path workingDirectory) {
         this.workingDirectory = workingDirectory;
+        if (Files.notExists(workingDirectory)) {
+            try {
+                Files.createDirectories(workingDirectory);
+            } catch (IOException e) {
+                LOGGER.error("Could not create working directory.", e);
+                System.exit(1);
+            }
+        }
     }
 
     public static LibraryService getInstance(Path workingDirectory) {
@@ -52,7 +60,6 @@ public class LibraryService {
                     .filter(file -> file.endsWith(".bib"))
                     .collect(Collectors.toList());
     }
-
 
     public void createLibrary(String libraryName) throws IOException {
         Files.createFile(getLibraryPath(libraryName));
