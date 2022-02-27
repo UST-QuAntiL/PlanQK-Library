@@ -11,25 +11,23 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
 import org.planqk.library.core.serialization.BibEntryAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Accumulation {
     private static final Logger LOGGER = LoggerFactory.getLogger(Accumulation.class);
     private final LibraryService libraryService;
 
     public Accumulation() {
-        LOGGER.info("Create resource....");
         libraryService = LibraryService.getInstance(ServerPropertyService.getInstance().getWorkingDirectory());
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllEntries() {
-        LOGGER.info("getting all entries...");
         try {
             List<BibEntry> entries = libraryService.getAllEntries();
             Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
@@ -38,7 +36,6 @@ public class Accumulation {
                            .entity(json)
                            .build();
         } catch (IOException e) {
-            LOGGER.info("getting all entries failed");
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();

@@ -144,18 +144,14 @@ public class LibraryService {
     }
 
     public List<BibEntry> getAllEntries() throws IOException {
-        LOGGER.info("Starting merge");
         List<String> libraryNames = getLibraryNames();
-        LOGGER.info("Starting merge");
         BibDatabase result = new BibDatabase();
         DatabaseMerger merger = new DatabaseMerger(JabRefPreferences.getInstance().getImportFormatPreferences().getKeywordSeparator());
-        LOGGER.info(libraryNames.toString());
         FileUpdateMonitor dummy = new DummyFileUpdateMonitor();
         libraryNames.stream()
                     .map(this::getLibraryPath)
                     .map(path -> {
                         try {
-                            LOGGER.info("Opening database...");
                             return OpenDatabase.loadDatabase(path, JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), dummy).getDatabase();
                         } catch (IOException e) {
                             // Just return an empty database, a.k.a if opening fails, ignore it
@@ -163,8 +159,6 @@ public class LibraryService {
                         }
                     })
                     .forEach(database -> merger.merge(result, database));
-
-        LOGGER.info("Ending merge");
         return new ArrayList<>(result.getEntries());
     }
 
