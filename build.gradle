@@ -56,6 +56,8 @@ dependencies {
         exclude group: 'org.tinylog', module: 'slf4j-tinylog'
     }
 
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.9'
+
     implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '3.0.3'
     implementation 'org.glassfish.jersey.core:jersey-client:3.0.4'
     implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '3.0.3'
@@ -63,12 +65,19 @@ dependencies {
     implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '3.0.2'
 
     implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.0.0'
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.9'
 
     //Logging:
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation group: 'org.tinylog', name: 'slf4j-tinylog', version: '2.4.1'
 
+    //Swagger https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Getting-started -> Makes
+    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.1.13'
+    implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.13.1'
+    implementation ('io.swagger.core.v3:swagger-jaxrs2-jakarta:2.1.13') {
+        exclude group: 'com.fasterxml.jackson.jaxrs', module: 'jackson-jaxrs-json-provider'
+    }
+
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-servlet-initializer-v2-jakarta:2.1.13'
 
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')
