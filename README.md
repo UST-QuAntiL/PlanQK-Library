@@ -11,6 +11,11 @@ We use the Gitflow-Workflow as our Git-Workflow. A detailed description about th
 1. Run `gradle build` inside the root folder.
 2. When completed, the built product can be found in `build/libs/PlanQK Library-1.0-SNAPSHOT.war`.
 
+### Running and Development
+
+The PlanQK Library is built based on [Tomcat in version 10](https://tomcat.apache.org/download-10.cgi).
+Thus, earlier version will not be able to host the application since they are not using the Jakarta XML library.
+
 ## Acknowledgements
 
 Current development is supported by the [Federal Ministry for Economic Affairs and Climate Action (BMWK)] as part of the [PlanQK] project (01MK20005N).
