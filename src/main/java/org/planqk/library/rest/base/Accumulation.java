@@ -3,6 +3,7 @@ package org.planqk.library.rest.base;
 import java.io.IOException;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.jabref.model.entry.BibEntry;
 
 import com.google.gson.Gson;
@@ -17,6 +18,7 @@ import org.planqk.library.core.serialization.BibEntryAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Tag(name = "All Libraries")
 public class Accumulation {
     private static final Logger LOGGER = LoggerFactory.getLogger(Accumulation.class);
     private final LibraryService libraryService;

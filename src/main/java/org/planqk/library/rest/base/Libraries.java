@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.jabref.model.entry.BibEntry;
 
 import com.google.gson.Gson;
@@ -25,6 +26,7 @@ import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
 import org.planqk.library.core.serialization.BibEntryAdapter;
 
+@Tag(name = "Libraries")
 public class Libraries {
     private final LibraryService libraryService;
     private static final Logger LOGGER = LoggerFactory.getLogger(Libraries.class);
@@ -65,7 +67,7 @@ public class Libraries {
     }
 
     @GET
-    @Path("/{libraryName}")
+    @Path("{libraryName}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLibraryEntries(@PathParam("libraryName") String libraryName) {
         try {
@@ -84,7 +86,7 @@ public class Libraries {
     }
 
     @POST
-    @Path("/{libraryName}")
+    @Path("{libraryName}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createEntryInLibrary(@PathParam("libraryName") String libraryName, String entryAsJSON) {
         Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
@@ -100,7 +102,7 @@ public class Libraries {
     }
 
     @DELETE
-    @Path("/{libraryName}")
+    @Path("{libraryName}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response deleteLibrary(@PathParam("libraryName") String libraryName) {
         try {
@@ -118,7 +120,7 @@ public class Libraries {
     }
 
     @GET
-    @Path("/{libraryName}/{citeKey}")
+    @Path("{libraryName}/{citeKey}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBibEntryMatchingCiteKey(@PathParam("libraryName") String libraryName, @PathParam("citeKey") String citeKey) {
         try {
@@ -144,7 +146,7 @@ public class Libraries {
     //  But in the given implementation this was explicitly not done.
     //  The reason for this is currently unclear? Maybe because these IDs are just volatile between executions, but would that result in a problem?
     @PUT
-    @Path("/{libraryName}/{citeKey}")
+    @Path("{libraryName}/{citeKey}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEntry(@PathParam("libraryName") String libraryName, @PathParam("citeKey") String citeKey, String entryAsJSON) {
         try {
@@ -161,7 +163,7 @@ public class Libraries {
     }
 
     @DELETE
-    @Path("/{libraryName}/{citeKey}")
+    @Path("{libraryName}/{citeKey}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response deleteEntryFromLibrary(@PathParam("libraryName") String libraryName, @PathParam("citeKey") String citeKey, String entryAsJSON) {
         try {

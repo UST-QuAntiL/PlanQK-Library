@@ -19,17 +19,17 @@ public class Root {
         return "<h1>Server runs</h1>";
     }
 
-    @Path("libraries/")
+    @Path("libraries")
     public Libraries getLibrariesResource() {
         return new Libraries();
     }
 
-    @Path("all/")
+    @Path("all")
     public Accumulation getAllEntriesResource() {
         return new Accumulation();
     }
 
-    @Path("slr/")
+    @Path("slr")
     public SLRRoot getSLRResource() {
         return new SLRRoot();
     }
