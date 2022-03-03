@@ -106,6 +106,8 @@ public class LibraryService {
             context = OpenDatabase.loadDatabase(libraryPath, JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), new DummyFileUpdateMonitor())
                                   .getDatabaseContext();
         }
+        // Required to get serialized
+        newEntry.setChanged(true);
         context.getDatabase().insertEntry(newEntry);
         GeneralPreferences generalPreferences = JabRefPreferences.getInstance().getGeneralPreferences();
         SavePreferences savePreferences = JabRefPreferences.getInstance().getSavePreferences();
@@ -115,6 +117,13 @@ public class LibraryService {
             BibtexDatabaseWriter databaseWriter = new BibtexDatabaseWriter(writer, JabRefPreferences.getInstance().getGeneralPreferences(), savePreferences, new BibEntryTypesManager());
             databaseWriter.saveDatabase(context);
         }
+    }
+
+    public void updateEntry(String libraryName, BibEntry updatedEntry) throws IOException {
+        this.deleteEntryByCiteKey(libraryName, updatedEntry.getCitationKey().orElseThrow(() -> new IllegalArgumentException("Cannot update an entry without a citation key.")));
+        // Required to get serialized
+        updatedEntry.setChanged(true);
+        this.addEntryToLibrary(libraryName, updatedEntry);
     }
 
     public boolean deleteEntryByCiteKey(String libraryName, String citeKey) throws IOException {

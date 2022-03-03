@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.field.StandardField;
@@ -16,9 +17,11 @@ import org.jabref.model.entry.types.StandardEntryType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.planqk.library.rest.base.Libraries;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -93,8 +96,6 @@ public class LibraryServiceTest {
                 .withField(StandardField.AUTHOR, "Harrer, S. and Lenhard, J. and Dietz, L.")
                 .withField(StandardField.DATE, "2018-03-20")
                 .withField(StandardField.TITLE, "Java by Comparison: Become a Java Craftsman in 70 Examples");
-        // Required to get serialized
-        newEntry.setChanged(true);
         libraryService.addEntryToLibrary("lib1", newEntry);
 
         List<BibEntry> currentEntries = libraryService.getLibraryEntries("lib1");
@@ -110,6 +111,43 @@ public class LibraryServiceTest {
         result.sort(Comparator.comparing(o -> o.getCitationKey().orElse("")));
         assertEquals(6, result.size());
         assertEquals(getMergedEntries(), result);
+    }
+
+    @Test
+    public void getEntryInLibrary() throws IOException {
+        for (BibEntry bibEntry : getEntriesLib1()) {
+            // Entry has to exist, thus we do not check with present and instead throw an exception
+            assertEquals(bibEntry, libraryService.getLibraryEntryMatchingCiteKey("lib1", bibEntry.getCitationKey().get()).orElseThrow());
+        }
+    }
+
+    @Test
+    public void updateEntryInLibrary() throws IOException {
+        BibEntry currentVersion = libraryService.getLibraryEntryMatchingCiteKey("lib1","Saha2018").orElseThrow();
+        BibEntry changedEntryWithDifferentDate = new BibEntry(StandardEntryType.Article)
+                .withCitationKey("Saha2018")
+                .withField(StandardField.AUTHOR, "Prashanta Saha and Upulee Kanewala")
+                .withField(StandardField.DATE, "2019-03-12")
+                .withField(StandardField.TITLE, "Fault Detection Effectiveness of Source Test Case Generation Strategies for Metamorphic Testing");
+        libraryService.updateEntry("lib1", changedEntryWithDifferentDate);
+
+        assertTrue(libraryService.getLibraryEntryMatchingCiteKey("lib1", "Saha2018").isPresent());
+        assertEquals(currentVersion.getField(StandardField.AUTHOR).orElseThrow(),
+                libraryService.getLibraryEntryMatchingCiteKey("lib1", "Saha2018").orElseThrow().getField(StandardField.AUTHOR).orElse(""));
+        assertEquals("2019-03-12",
+                libraryService.getLibraryEntryMatchingCiteKey("lib1", "Saha2018").orElseThrow().getField(StandardField.DATE).orElse(""));
+    }
+
+    @Test
+    public void deleteEntryInLibrary() throws IOException {
+        List<BibEntry> entriesWithCiteKeyToDelete = libraryService.getLibraryEntries("lib1").stream()
+                                                                  .filter(bibEntry -> bibEntry.getCitationKey().get().equals("Saha2018"))
+                                                                  .toList();
+        assertTrue(entriesWithCiteKeyToDelete.size() > 0);
+
+        libraryService.deleteEntryByCiteKey("lib1", "Saha2018");
+
+        libraryService.getLibraryEntries("lib1").forEach(bibEntry -> assertNotEquals("Saha2018", bibEntry.getCitationKey()));
     }
 
     private List<BibEntry> getModifiedEntriesLib1() {

@@ -117,7 +117,6 @@ public class Libraries {
         }
     }
 
-    // TODO: Test
     @GET
     @Path("/{libraryName}/{citeKey}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -139,20 +138,19 @@ public class Libraries {
         }
     }
 
-    // TODO: Test
     // TODO:
     //  The issue with this is still the fact that the cite key does not have to be unique, leading to unexpected behaviour.
-    //  This might be fixable using the ID field (if it is truly unique?), but this would require the ID field to be serialized.
+    //  This might be fixable using the ID field (if it is truly unique?), but this would require the ID field to be de-/marshalled.
     //  But in the given implementation this was explicitly not done.
-    //  The reason for this is currently unclear to me? Maybe because these IDs are just volatile between executions, but would that result in a problem?
+    //  The reason for this is currently unclear? Maybe because these IDs are just volatile between executions, but would that result in a problem?
     @PUT
     @Path("/{libraryName}/{citeKey}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEntry(@PathParam("libraryName") String libraryName, @PathParam("citeKey") String citeKey, String entryAsJSON) {
         try {
-            libraryService.deleteEntryByCiteKey(libraryName, citeKey);
             Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
-            libraryService.addEntryToLibrary(libraryName, gson.fromJson(entryAsJSON, BibEntry.class));
+            BibEntry updatedEntry = gson.fromJson(entryAsJSON, BibEntry.class);
+            libraryService.updateEntry(libraryName, updatedEntry);
             return Response.ok("Entry updated.")
                            .build();
         } catch (IOException e) {
@@ -162,7 +160,6 @@ public class Libraries {
         }
     }
 
-    // TODO: Test
     @DELETE
     @Path("/{libraryName}/{citeKey}")
     @Produces(MediaType.TEXT_PLAIN)
