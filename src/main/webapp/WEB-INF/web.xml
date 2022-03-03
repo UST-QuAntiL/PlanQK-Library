@@ -46,7 +46,7 @@
 
     <servlet-mapping>
         <servlet-name>PlanQKLibrary</servlet-name>
-        <url-pattern>/api/*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>OpenApi</servlet-name>
