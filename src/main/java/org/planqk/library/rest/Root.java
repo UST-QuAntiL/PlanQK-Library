@@ -1,14 +1,16 @@
 package org.planqk.library.rest;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import org.planqk.library.rest.base.Accumulation;
 import org.planqk.library.rest.base.Libraries;
 import org.planqk.library.rest.slr.SLRRoot;
-import org.planqk.library.rest.base.Accumulation;
 
-@Path("api/")
+@OpenAPIDefinition
+@Path("/")
 public class Root {
 
     @GET

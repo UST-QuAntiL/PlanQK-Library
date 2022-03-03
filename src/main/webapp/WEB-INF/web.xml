@@ -1,11 +1,38 @@
 <web-app version="5.0"
          xmlns="https://jakarta.ee/xml/ns/jakartaee">
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+        <init-param>
+            <param-name>cors.allowed.origins</param-name>
+            <param-value>*</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cors.allowed.methods</param-name>
+            <param-value>GET,PUT,POST,DELETE,HEAD,OPTIONS</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cors.allowed.headers</param-name>
+            <param-value>
+                Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,DNT
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>cors.exposed.headers</param-name>
+            <param-value>Location,Access-Control-Allow-Origin</param-value>
+        </init-param>
+    </filter>
+
     <servlet>
         <servlet-name>PlanQKLibrary</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>org.planqk.library.rest</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.server.provider.scanning.recursive</param-name>
+            <param-value>false</param-value>
         </init-param>
     </servlet>
     <servlet>
@@ -19,10 +46,10 @@
 
     <servlet-mapping>
         <servlet-name>PlanQKLibrary</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>OpenApi</servlet-name>
-        <url-pattern>/openapi/*</url-pattern>
+        <url-pattern>/openapi</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -1,0 +1,12 @@
+prettyPrint: true
+cacheTTL: 0
+openapi:
+  info:
+    version: '1.0'
+    title: PlanQK Library
+    description: TODO
+    contact:
+      email: TODO
+    license:
+      name: Apache 2.0
+      url: http://www.apache.org/licenses/LICENSE-2.0.html
