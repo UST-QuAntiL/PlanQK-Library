@@ -131,4 +131,9 @@ public class StudyService {
     private Path getStudyPath(String studyName) {
         return studiesDirectory.resolve(Paths.get(studyName));
     }
+
+    public Study getStudyDefinition(String studyName) throws IOException {
+        StudyYamlParser parser = new StudyYamlParser();
+        return parser.parseStudyYamlFile(studiesDirectory.resolve(Paths.get(studyName, "study.yml")));
+    }
 }

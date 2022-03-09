@@ -17,7 +17,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.StudyService;
-import org.planqk.library.rest.base.Libraries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,5 +112,20 @@ public class Studies {
     public void getStudyResults(@PathParam("studyName") String studyName) {
         //TODO:
         return;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{studyName}/studyDefinition")
+    public Response getStudyDefinition(@PathParam("studyName") String studyName) {
+        try {
+            return Response.ok("No crawl currently running.")
+                           .entity(studyService.getStudyDefinition(studyName))
+                           .build();
+        } catch (IOException e) {
+            return Response.serverError()
+                           .entity(e.getMessage())
+                           .build();
+        }
     }
 }
