@@ -19,7 +19,6 @@ import org.jabref.logic.importer.ParseException;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.BibEntryTypesManager;
 import org.jabref.model.study.Study;
-import org.jabref.model.study.StudyDatabase;
 import org.jabref.model.util.DummyFileUpdateMonitor;
 import org.jabref.preferences.JabRefPreferences;
 
@@ -70,7 +69,6 @@ public class StudyService {
                     .collect(Collectors.toList());
     }
 
-
     public void createStudy(Study study) throws IOException {
         Files.createDirectories(studiesDirectory.resolve(Paths.get(study.getTitle())));
         StudyYamlParser parser = new StudyYamlParser();
@@ -106,9 +104,10 @@ public class StudyService {
         if (runningCrawls.containsKey(studyName)) {
             return false;
         }
-        CrawlTask crawl = new CrawlTask(new Crawler(studiesDirectory.resolve(Paths.get(studyName)), new SlrGitHandler(studiesDirectory), JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), JabRefPreferences.getInstance().getSavePreferences(), new BibEntryTypesManager(), new DummyFileUpdateMonitor()));
+        Path studyDirectory = studiesDirectory.resolve(Paths.get(studyName));
+        CrawlTask crawl = new CrawlTask(new Crawler(studyDirectory, new SlrGitHandler(studyDirectory), JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), JabRefPreferences.getInstance().getSavePreferences(), new BibEntryTypesManager(), new DummyFileUpdateMonitor()));
         // TODO: is this the right way?
-        runningCrawls.put(studyName,crawl);
+        runningCrawls.put(studyName, crawl);
         new Thread(crawl).start();
         return true;
     }

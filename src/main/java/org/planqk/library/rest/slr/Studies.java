@@ -30,19 +30,6 @@ public class Studies {
         studyService = StudyService.getInstance(ServerPropertyService.getInstance().getWorkingDirectory());
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getText() {
-        try {
-            return Response.ok(studyService.getStudyNames())
-                           .build();
-        } catch (IOException e) {
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
-        }
-    }
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createStudy(Study study) {
