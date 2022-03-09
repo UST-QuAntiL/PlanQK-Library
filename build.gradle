@@ -76,12 +76,14 @@ dependencies {
     implementation ('io.swagger.core.v3:swagger-jaxrs2-jakarta:2.1.13') {
         exclude group: 'com.fasterxml.jackson.jaxrs', module: 'jackson-jaxrs-json-provider'
     }
-    implementation group: 'org.webjars', name: 'swagger-ui', version: '4.5.2'
     // https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
     implementation group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.1.12'
 
-
     implementation 'io.swagger.core.v3:swagger-jaxrs2-servlet-initializer-v2-jakarta:2.1.13'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:6.0.0.202111291000-r'
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+
 
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')

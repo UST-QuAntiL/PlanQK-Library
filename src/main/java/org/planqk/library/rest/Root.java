@@ -7,7 +7,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import org.planqk.library.rest.base.Accumulation;
 import org.planqk.library.rest.base.Libraries;
-import org.planqk.library.rest.slr.SLRRoot;
+import org.planqk.library.rest.slr.Studies;
 
 @OpenAPIDefinition
 @Path("/")
@@ -29,8 +29,8 @@ public class Root {
         return new Accumulation();
     }
 
-    @Path("slr")
-    public SLRRoot getSLRResource() {
-        return new SLRRoot();
+    @Path("studies")
+    public Studies getStudyResource() {
+        return new Studies();
     }
 }

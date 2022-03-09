@@ -53,7 +53,7 @@ public class Libraries {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createNewLibrary(String libraryName) {
         if (libraryService.libraryExists(libraryName)) {
-            return Response.status(Response.Status.CONFLICT).entity("The given library name is already in use").build();
+            return Response.status(Response.Status.CONFLICT).entity("The given library name is already in use.").build();
         }
         try {
             libraryService.createLibrary(libraryName);
@@ -77,7 +77,7 @@ public class Libraries {
             return Response.ok(json)
                            .build();
         } catch (FileNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Could not find library").build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Could not find library.").build();
         } catch (IOException e) {
             return Response.serverError()
                            .entity(e.getMessage())
