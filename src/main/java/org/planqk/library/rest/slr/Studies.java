@@ -17,6 +17,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.StudyService;
+import org.planqk.library.rest.base.Library;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,19 @@ public class Studies {
 
     public Studies() {
         studyService = StudyService.getInstance(ServerPropertyService.getInstance().getWorkingDirectory());
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getStudyNames() {
+        try {
+            return Response.ok(studyService.getStudyNames().toString())
+                           .build();
+        } catch (IOException e) {
+            return Response.serverError()
+                           .entity(e.getMessage())
+                           .build();
+        }
     }
 
     @POST
@@ -45,6 +59,11 @@ public class Studies {
                            .entity(e.getMessage())
                            .build();
         }
+    }
+
+    @Path("{studyName}/results")
+    public Library getStudyResults(@PathParam("studyName") String studyName) {
+        return new Library(studyService.getStudyPath(studyName), "studyResult");
     }
 
     @DELETE
@@ -92,13 +111,6 @@ public class Studies {
         // TODO: Provide him with {studyName}/results to get results later
         return Response.ok("No crawl currently running.")
                        .build();
-    }
-
-    @GET
-    @Path("{studyName}")
-    public void getStudyResults(@PathParam("studyName") String studyName) {
-        //TODO:
-        return;
     }
 
     @GET

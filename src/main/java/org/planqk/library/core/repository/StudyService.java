@@ -127,7 +127,7 @@ public class StudyService {
         return false;
     }
 
-    private Path getStudyPath(String studyName) {
+    public Path getStudyPath(String studyName) {
         return studiesDirectory.resolve(Paths.get(studyName));
     }
 
