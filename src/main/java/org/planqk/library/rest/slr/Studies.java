@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //TODO: Test all endpoints here
+@Path("studies")
 @Tag(name = "Systematic Literature Review")
 public class Studies {
     private final StudyService studyService;
@@ -128,3 +129,4 @@ public class Studies {
         }
     }
 }
+//TODO: Test all endpoints here

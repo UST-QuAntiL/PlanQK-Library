@@ -52,7 +52,7 @@ public class StudyService {
         }
     }
 
-    public static StudyService getInstance(Path workingDirectory) {
+    public static synchronized StudyService getInstance(Path workingDirectory) {
         return instances.computeIfAbsent(workingDirectory, StudyService::new);
     }
 
@@ -69,7 +69,7 @@ public class StudyService {
                     .collect(Collectors.toList());
     }
 
-    public void createStudy(Study study) throws IOException {
+    public synchronized void createStudy(Study study) throws IOException {
         Files.createDirectories(studiesDirectory.resolve(Paths.get(study.getTitle())));
         StudyYamlParser parser = new StudyYamlParser();
         parser.writeStudyYamlFile(study, studiesDirectory.resolve(Paths.get(study.getTitle(), "study.yml")));
@@ -83,32 +83,20 @@ public class StudyService {
         return Files.exists(getStudyPath(studyName));
     }
 
-    public List<BibEntry> getStudyResult(String studyName) throws IOException {
-        Path resultPath = getStudyPath(studyName).resolve("result.bib");
-        if (!Files.exists(resultPath)) {
-            throw new FileNotFoundException();
-        }
-        // We do not need any update monitoring
-        return new ArrayList<>(OpenDatabase.loadDatabase(resultPath, JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), new DummyFileUpdateMonitor())
-                                           .getDatabase()
-                                           .getEntries());
-    }
-
     /**
      * Starts a crawl for a specific study
      *
      * @return Returns whether a crawl was started, returns false if a crawl for the specified study is already running
      * @throws ParseException Occurs if the study definition file is malformed
      */
-    public Boolean startCrawl(String studyName) throws IOException, ParseException {
-        if (runningCrawls.containsKey(studyName)) {
-            return false;
-        }
-        Path studyDirectory = studiesDirectory.resolve(Paths.get(studyName));
-        CrawlTask crawl = new CrawlTask(new Crawler(studyDirectory, new SlrGitHandler(studyDirectory), JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), JabRefPreferences.getInstance().getSavePreferences(), new BibEntryTypesManager(), new DummyFileUpdateMonitor()));
-        // TODO: is this the right way?
-        runningCrawls.put(studyName, crawl);
-        new Thread(crawl).start();
+    public synchronized Boolean startCrawl(String studyName) throws IOException, ParseException {
+            if (runningCrawls.containsKey(studyName)) {
+                return false;
+            }
+            Path studyDirectory = studiesDirectory.resolve(Paths.get(studyName));
+            CrawlTask crawl = new CrawlTask(new Crawler(studyDirectory, new SlrGitHandler(studyDirectory), JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), JabRefPreferences.getInstance().getSavePreferences(), new BibEntryTypesManager(), new DummyFileUpdateMonitor()));
+            runningCrawls.put(studyName, crawl);
+            new Thread(crawl).start();
         return true;
     }
 

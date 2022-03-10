@@ -16,6 +16,7 @@ import org.planqk.library.core.repository.LibraryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Path("libraries")
 @Tag(name = "Libraries")
 public class Libraries {
     private final LibraryService libraryService;

@@ -22,17 +22,14 @@ import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
 import org.planqk.library.core.serialization.BibEntryAdapter;
-import org.planqk.library.rest.slr.Studies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Tag(name = "Library")
-public class Library extends Libraries {
+public class Library {
     private final LibraryService libraryService;
     private final String libraryName;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Library.class);
-
 
     public Library(String libraryName) {
         this.libraryName = libraryName;

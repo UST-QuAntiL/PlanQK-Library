@@ -9,6 +9,7 @@ import org.jabref.model.entry.BibEntry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -18,6 +19,7 @@ import org.planqk.library.core.serialization.BibEntryAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Path("all")
 @Tag(name = "All Libraries")
 public class Accumulation {
     private static final Logger LOGGER = LoggerFactory.getLogger(Accumulation.class);

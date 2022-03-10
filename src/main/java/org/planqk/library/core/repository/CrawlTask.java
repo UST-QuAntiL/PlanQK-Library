@@ -26,7 +26,6 @@ public class CrawlTask implements Runnable {
             crawler.performCrawl();
         } catch (IOException | GitAPIException | SaveException e) {
             status = TaskStatus.FAILED;
-            // TODO: What to do in case of an issue here....
             throw new RuntimeException(e);
         }
         status = TaskStatus.DONE;
