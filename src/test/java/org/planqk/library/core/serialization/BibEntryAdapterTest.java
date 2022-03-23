@@ -3,7 +3,10 @@ package org.planqk.library.core.serialization;
 import java.util.List;
 
 import org.jabref.model.entry.BibEntry;
+import org.jabref.model.entry.field.SpecialField;
+import org.jabref.model.entry.field.SpecialFieldValue;
 import org.jabref.model.entry.field.StandardField;
+import org.jabref.model.entry.field.UnknownField;
 import org.jabref.model.entry.types.StandardEntryType;
 
 import com.google.gson.Gson;
@@ -20,6 +23,15 @@ class BibEntryAdapterTest {
         BibEntry entry = getEntriesLib1().get(0);
         Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
         String json = gson.toJson(entry);
+        assertEquals("{\"entrytype\":\"Article\",\"citekey\":\"Saha2018\",\"author\":\"Prashanta Saha and Upulee Kanewala\",\"date\":\"2018-02-20\",\"title\":\"Fault Detection Effectiveness of Source Test Case Generation Strategies for Metamorphic Testing\"}", json);
+    }
+
+    @Test
+    void writeSpecial() {
+        BibEntry entry = getEntriesLib1().get(1);
+        Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
+        String json = gson.toJson(entry);
+        assertEquals("{\"entrytype\":\"Article\",\"citekey\":\"Sanchez2016\",\"author\":\"Jimi Sanchez\",\"date\":\"2016-06-01\",\"priority\":\"prio1\",\"title\":\"A Review of Pair-wise Testing\"}", json);
     }
 
     @Test
@@ -28,6 +40,22 @@ class BibEntryAdapterTest {
         Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
         BibEntry deserializedEntry = gson.fromJson(json, BibEntry.class);
         assertEquals(getEntriesLib1().get(0), deserializedEntry);
+    }
+
+    @Test
+    void parseUnkownField() {
+        String json = "{\"123\":\"456\"}";
+        Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
+        BibEntry deserializedEntry = gson.fromJson(json, BibEntry.class);
+        assertEquals("456", deserializedEntry.getField(new UnknownField("123")).get());
+    }
+
+    @Test
+    void parseSpecialField() {
+        String json = "{\"priority\":\"prio1\"}";
+        Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
+        BibEntry deserializedEntry = gson.fromJson(json, BibEntry.class);
+        assertEquals(SpecialFieldValue.PRIORITY_HIGH.getFieldValue().get(), deserializedEntry.getField(SpecialField.PRIORITY).get());
     }
 
     @Test
@@ -48,6 +76,7 @@ class BibEntryAdapterTest {
                 .withCitationKey("Sanchez2016")
                 .withField(StandardField.AUTHOR, "Jimi Sanchez")
                 .withField(StandardField.DATE, "2016-06-01")
+                .withField(SpecialField.PRIORITY, "prio1")
                 .withField(StandardField.TITLE, "A Review of Pair-wise Testing");
         BibEntry entry3 = new BibEntry(StandardEntryType.Article)
                 .withCitationKey("Wu2007")

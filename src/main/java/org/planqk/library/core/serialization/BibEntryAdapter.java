@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -12,8 +13,11 @@ import org.jabref.logic.TypedBibEntry;
 import org.jabref.model.database.BibDatabaseMode;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.field.Field;
+import org.jabref.model.entry.field.IEEEField;
 import org.jabref.model.entry.field.InternalField;
+import org.jabref.model.entry.field.SpecialField;
 import org.jabref.model.entry.field.StandardField;
+import org.jabref.model.entry.field.UnknownField;
 import org.jabref.model.entry.types.StandardEntryType;
 
 import com.google.gson.TypeAdapter;
@@ -75,9 +79,31 @@ public class BibEntryAdapter extends TypeAdapter<BibEntry> {
                     deserializedEntry.setType(StandardEntryType.valueOf(in.nextString()));
                     break;
                 default:
-                    StandardField parsedField = Arrays.stream(StandardField.values())
-                                                      .filter(e -> e.name().equalsIgnoreCase(field)).findAny().orElseThrow(IllegalArgumentException::new);
-                    deserializedEntry.withField(parsedField, in.nextString());
+                    // We cannot apply an optional of Field here as e.g. Optional<StandardField> cannot be assigned to Optional<Field>
+                    Optional<StandardField> parsedField = Arrays.stream(StandardField.values())
+                                                                .filter(e -> e.name().equalsIgnoreCase(field))
+                                                                .findAny();
+                    if (parsedField.isPresent()) {
+                        deserializedEntry.withField(parsedField.get(), in.nextString());
+                        break;
+                    }
+
+                    Optional<IEEEField> parsedIEEEField = Arrays.stream(IEEEField.values())
+                                                                .filter(e -> e.name().equalsIgnoreCase(field))
+                                                                .findAny();
+                    if (parsedIEEEField.isPresent()) {
+                        deserializedEntry.withField(parsedIEEEField.get(), in.nextString());
+                        break;
+                    }
+                    Optional<SpecialField> parsedSpecialField = Arrays.stream(SpecialField.values())
+                                                                      .filter(e -> e.name().equalsIgnoreCase(field))
+                                                                      .findAny();
+                    if (parsedSpecialField.isPresent()) {
+                        deserializedEntry.withField(parsedSpecialField.get(), in.nextString());
+                        break;
+                    }
+                    UnknownField unknownField = new UnknownField(field);
+                    deserializedEntry.withField(unknownField, in.nextString());
             }
         }
         deserializedEntry.setChanged(true);
