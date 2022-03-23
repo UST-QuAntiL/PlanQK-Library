@@ -4,7 +4,7 @@
     <option name="COMMON_VM_ARGUMENTS" value="-Dfile.encoding=UTF-8" />
     <option name="UPDATING_POLICY" value="restart-server" />
     <deployment>
-      <artifact name="Gradle : org.planqk : PlanQK Library-1.0-SNAPSHOT.war (exploded)">
+      <artifact name="Gradle : org.planqk : PlanQK-Library-1.0-SNAPSHOT.war (exploded)">
         <settings>
           <option name="CONTEXT_PATH" value="" />
         </settings>
@@ -85,7 +85,7 @@
     <method v="2">
       <option name="MakeProject" enabled="true" />
       <option name="BuildArtifacts" enabled="true">
-        <artifact name="Gradle : org.planqk : PlanQK Library-1.0-SNAPSHOT.war (exploded)" />
+        <artifact name="Gradle : org.planqk : PlanQK-Library-1.0-SNAPSHOT.war (exploded)" />
       </option>
     </method>
   </configuration>
