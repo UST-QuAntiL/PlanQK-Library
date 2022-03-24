@@ -121,7 +121,7 @@ public class Library {
         try {
             Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
             BibEntry updatedEntry = gson.fromJson(entryAsJSON, BibEntry.class);
-            libraryService.updateEntry(libraryName, updatedEntry);
+            libraryService.updateEntry(libraryName, citeKey, updatedEntry);
             return Response.ok("Entry updated.")
                            .build();
         } catch (IOException e) {
@@ -134,7 +134,7 @@ public class Library {
     @DELETE
     @Path("{citeKey}")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response deleteEntryFromLibrary(@PathParam("citeKey") String citeKey, String entryAsJSON) {
+    public Response deleteEntryFromLibrary(@PathParam("citeKey") String citeKey) {
         try {
             boolean deleted = libraryService.deleteEntryByCiteKey(libraryName, citeKey);
             if (deleted) {
