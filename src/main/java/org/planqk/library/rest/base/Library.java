@@ -22,6 +22,8 @@ import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
 import org.planqk.library.core.serialization.BibEntryAdapter;
+import org.planqk.library.rest.model.BibEntryDTO;
+import org.planqk.library.rest.model.LibraryEntries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +50,7 @@ public class Library {
             List<BibEntry> entries = libraryService.getLibraryEntries(libraryName);
             Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
             String json = gson.toJson(entries);
-            return Response.ok(json)
+            return Response.ok(new LibraryEntries(json))
                            .build();
         } catch (IOException e) {
             return Response.serverError()
@@ -59,10 +61,10 @@ public class Library {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createEntryInLibrary(String entryAsJSON) {
+    public Response createEntryInLibrary(BibEntryDTO bibEntry) {
         Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
         try {
-            libraryService.addEntryToLibrary(libraryName, gson.fromJson(entryAsJSON, BibEntry.class));
+            libraryService.addEntryToLibrary(libraryName, bibEntry.entry);
         } catch (IOException e) {
             return Response.serverError()
                            .entity(e.getMessage())
@@ -95,9 +97,7 @@ public class Library {
         try {
             Optional<BibEntry> entry = libraryService.getLibraryEntryMatchingCiteKey(libraryName, citeKey);
             if (entry.isPresent()) {
-                Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
-                String json = gson.toJson(entry);
-                return Response.ok(json)
+                return Response.ok(new BibEntryDTO(entry.get()))
                                .build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).entity("Could not find entry.").build();
@@ -117,10 +117,10 @@ public class Library {
     @PUT
     @Path("{citeKey}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateEntry(@PathParam("citeKey") String citeKey, String entryAsJSON) {
+    public Response updateEntry(@PathParam("citeKey") String citeKey, BibEntryDTO bibEntry) {
         try {
             Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
-            BibEntry updatedEntry = gson.fromJson(entryAsJSON, BibEntry.class);
+            BibEntry updatedEntry = bibEntry.entry;
             libraryService.updateEntry(libraryName, citeKey, updatedEntry);
             return Response.ok("Entry updated.")
                            .build();
@@ -133,7 +133,7 @@ public class Library {
 
     @DELETE
     @Path("{citeKey}")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response deleteEntryFromLibrary(@PathParam("citeKey") String citeKey) {
         try {
             boolean deleted = libraryService.deleteEntryByCiteKey(libraryName, citeKey);

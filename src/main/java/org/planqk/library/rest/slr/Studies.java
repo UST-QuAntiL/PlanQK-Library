@@ -33,7 +33,7 @@ public class Studies {
     }
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getStudyNames() {
         try {
             return Response.ok(studyService.getStudyNames().toString())
@@ -82,19 +82,18 @@ public class Studies {
     }
 
     @POST
-    @Path("{studyName}/run-study")
+    @Path("{studyName}/crawl")
     public Response crawlStudy(@PathParam("studyName") String studyName) {
         try {
             Boolean crawlStarted = studyService.startCrawl(studyName);
             if (crawlStarted) {
-                // TODO: Provide him with {studyName}/crawl to check status -> How?
                 return Response.ok("Crawl started.")
                                .build();
             }
-            // TODO: Provide him with {studyName}/crawl to check status
             return Response.ok("Crawl was already running, no new run started.")
                            .build();
         } catch (IOException | ParseException e) {
+            LOGGER.error("Error during crawling", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
@@ -105,11 +104,9 @@ public class Studies {
     @Path("{studyName}/crawl")
     public Response getCrawlStatus(@PathParam("studyName") String studyName) {
         if (studyService.isCrawlRunning(studyName)) {
-            // TODO: Provide him with {studyName}/results to get results later
             return Response.ok("Crawl currently running")
                            .build();
         }
-        // TODO: Provide him with {studyName}/results to get results later
         return Response.ok("No crawl currently running.")
                        .build();
     }

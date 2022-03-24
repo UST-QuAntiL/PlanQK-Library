@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
+import org.planqk.library.rest.model.LibraryNames;
+import org.planqk.library.rest.model.NewLibraryConfiguration;
 
 @Path("libraries")
 @Tag(name = "Libraries")
@@ -27,7 +29,7 @@ public class Libraries {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLibraryNames() {
         try {
-            return Response.ok(libraryService.getLibraryNames().toString())
+            return Response.ok(new LibraryNames(libraryService.getLibraryNames()))
                            .build();
         } catch (IOException e) {
             return Response.serverError()
@@ -37,20 +39,20 @@ public class Libraries {
     }
 
     @POST
-    @Consumes({MediaType.TEXT_PLAIN})
+    @Consumes({MediaType.APPLICATION_JSON})
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createNewLibrary(String libraryName) {
-        if (libraryService.libraryExists(libraryName)) {
+    public Response createNewLibrary(NewLibraryConfiguration newLibraryConfiguration) {
+        if (libraryService.libraryExists(newLibraryConfiguration.getLibraryName())) {
             return Response.status(Response.Status.CONFLICT).entity("The given library name is already in use.").build();
         }
         try {
-            libraryService.createLibrary(libraryName);
+            libraryService.createLibrary(newLibraryConfiguration);
         } catch (IOException e) {
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
         }
-        return Response.ok("Library with name " + libraryName + " created.")
+        return Response.ok("Library with name " + newLibraryConfiguration.getLibraryName() + " created.")
                        .build();
     }
 
