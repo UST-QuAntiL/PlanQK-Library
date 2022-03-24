@@ -119,8 +119,8 @@ public class LibraryService {
         }
     }
 
-    public void updateEntry(String libraryName, BibEntry updatedEntry) throws IOException {
-        this.deleteEntryByCiteKey(libraryName, updatedEntry.getCitationKey().orElseThrow(() -> new IllegalArgumentException("Cannot update an entry without a citation key.")));
+    public void updateEntry(String libraryName, String citeKey, BibEntry updatedEntry) throws IOException {
+        this.deleteEntryByCiteKey(libraryName, citeKey);
         // Required to get serialized
         updatedEntry.setChanged(true);
         this.addEntryToLibrary(libraryName, updatedEntry);

@@ -13,8 +13,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Path("libraries")
 @Tag(name = "Libraries")
@@ -26,7 +24,7 @@ public class Libraries {
     }
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getLibraryNames() {
         try {
             return Response.ok(libraryService.getLibraryNames().toString())

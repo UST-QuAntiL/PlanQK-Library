@@ -73,7 +73,6 @@ public class Library {
     }
 
     @DELETE
-    @Produces(MediaType.TEXT_PLAIN)
     public Response deleteLibrary() {
         try {
             if (libraryService.deleteLibrary(libraryName)) {

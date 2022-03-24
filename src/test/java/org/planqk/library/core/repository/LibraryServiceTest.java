@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.field.StandardField;
@@ -17,7 +16,6 @@ import org.jabref.model.entry.types.StandardEntryType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.planqk.library.rest.base.Libraries;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -129,7 +127,7 @@ public class LibraryServiceTest {
                 .withField(StandardField.AUTHOR, "Prashanta Saha and Upulee Kanewala")
                 .withField(StandardField.DATE, "2019-03-12")
                 .withField(StandardField.TITLE, "Fault Detection Effectiveness of Source Test Case Generation Strategies for Metamorphic Testing");
-        libraryService.updateEntry("lib1", changedEntryWithDifferentDate);
+        libraryService.updateEntry("lib1", "Saha2018", changedEntryWithDifferentDate);
 
         assertTrue(libraryService.getLibraryEntryMatchingCiteKey("lib1", "Saha2018").isPresent());
         assertEquals(currentVersion.getField(StandardField.AUTHOR).orElseThrow(),
