@@ -25,7 +25,6 @@ public class ServerPropertyService {
      *  1. config.properties
      *  2. Environment variable LIBRARY_WORKSPACE
      *  3. Default User home with a new directory for the library
-     * @return
      */
     private Properties loadProperties() {
         try (InputStream stream = ServerPropertyService.class.getClassLoader().getResourceAsStream("config.properties")){
@@ -36,6 +35,7 @@ public class ServerPropertyService {
                     LOGGER.info("Environment Variable found, using defined directory: {}", System.getenv("LIBRARY_WORKSPACE"));
                     properties.setProperty("workingDirectory", System.getenv("LIBRARY_WORKSPACE"));
                 } else {
+                    LOGGER.info("Working directory was not found in either the properties or the environment variables, falling back to default location: {}", System.getProperty("user.home") + "/planqk-library");
                     properties.setProperty("workingDirectory", System.getProperty("user.home") + "/planqk-library");
                 }
             }

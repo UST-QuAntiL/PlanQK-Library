@@ -3,7 +3,7 @@ COPY . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle assemble --no-daemon
 
-FROM tomcat:10.1-jdk17
+FROM tomcat:10.0-jdk17
 LABEL maintainer = "Lukas Harzenetter <lharzenetter@gmx.de>"
 
 ENV LIBRARY_WORKSPACE ~/planqk-library
