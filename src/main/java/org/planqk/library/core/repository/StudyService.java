@@ -41,7 +41,7 @@ public class StudyService {
      * @param workingDirectory the path under which the studies can be found in the studies directory
      */
     private StudyService(Path workingDirectory) {
-        this.studiesDirectory = workingDirectory.resolve(Paths.get("studies"));
+        this.studiesDirectory = workingDirectory.resolve("studies");
         if (Files.notExists(studiesDirectory)) {
             try {
                 Files.createDirectories(studiesDirectory);
