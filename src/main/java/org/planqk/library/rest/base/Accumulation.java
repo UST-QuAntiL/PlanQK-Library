@@ -6,8 +6,6 @@ import java.util.List;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.jabref.model.entry.BibEntry;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -15,7 +13,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
-import org.planqk.library.core.serialization.BibEntryAdapter;
+import org.planqk.library.rest.model.BibEntries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,12 +32,10 @@ public class Accumulation {
     public Response getAllEntries() {
         try {
             List<BibEntry> entries = libraryService.getAllEntries();
-            Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
-            String json = gson.toJson(entries);
-            return Response.ok()
-                           .entity(json)
+            return Response.ok(new BibEntries(entries))
                            .build();
         } catch (IOException e) {
+            LOGGER.error("Error accumulating all entries.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();

@@ -32,6 +32,7 @@
                 org.planqk.library.rest
                 org.planqk.library.rest.slr
                 org.planqk.library.rest.base
+                org.planqk.library.rest.serialization
             </param-value>
         </init-param>
         <init-param>

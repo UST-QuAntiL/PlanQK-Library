@@ -11,6 +11,8 @@ import org.jabref.model.entry.types.StandardEntryType;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,26 +22,18 @@ class BibEntryJacksonSerializerTest {
     @Test
     void write() throws IOException {
         BibEntry entry = getEntriesLib1().get(0);
-        BibEntryJacksonSerializer serializer = new BibEntryJacksonSerializer(BibEntry.class);
-        ByteArrayOutputStream serializationOutput = new ByteArrayOutputStream();
-        JsonGenerator generator = new JsonFactory().createGenerator(serializationOutput);
-        serializer.serialize(entry, generator, null);
-        generator.close();
-        serializationOutput.close();
-        String json = serializationOutput.toString();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new SimpleModule().addSerializer(new BibEntryJacksonSerializer(BibEntry.class)));
+        String json = mapper.writeValueAsString(entry);
         assertEquals("{\"entrytype\":\"Article\",\"citekey\":\"Saha2018\",\"author\":\"Prashanta Saha and Upulee Kanewala\",\"date\":\"2018-02-20\",\"title\":\"Fault Detection Effectiveness of Source Test Case Generation Strategies for Metamorphic Testing\"}", json);
     }
 
     @Test
     void writeSpecial() throws IOException {
         BibEntry entry = getEntriesLib1().get(1);
-        BibEntryJacksonSerializer serializer = new BibEntryJacksonSerializer(BibEntry.class);
-        ByteArrayOutputStream serializationOutput = new ByteArrayOutputStream();
-        JsonGenerator generator = new JsonFactory().createGenerator(serializationOutput);
-        serializer.serialize(entry, generator, null);
-        generator.close();
-        serializationOutput.close();
-        String json = serializationOutput.toString();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new SimpleModule().addSerializer(new BibEntryJacksonSerializer(BibEntry.class)));
+        String json = mapper.writeValueAsString(entry);
         assertEquals("{\"entrytype\":\"Article\",\"citekey\":\"Sanchez2016\",\"author\":\"Jimi Sanchez\",\"date\":\"2016-06-01\",\"priority\":\"prio1\",\"title\":\"A Review of Pair-wise Testing\"}", json);
     }
 

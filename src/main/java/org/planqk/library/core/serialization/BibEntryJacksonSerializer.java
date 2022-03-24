@@ -16,13 +16,16 @@ import org.jabref.model.entry.field.InternalField;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BibEntryJacksonSerializer extends StdSerializer<BibEntry> {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(BibEntryJacksonSerializer.class);
     private static final String JSON_TYPE = "entrytype";
     private static final String JSON_KEY = "citekey";
 
-    protected BibEntryJacksonSerializer(Class<BibEntry> t) {
+    public BibEntryJacksonSerializer(Class<BibEntry> t) {
         super(t);
     }
 

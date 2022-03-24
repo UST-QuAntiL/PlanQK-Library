@@ -60,8 +60,9 @@ dependencies {
 
     implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '3.0.3'
     implementation 'org.glassfish.jersey.core:jersey-client:3.0.4'
+    implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.13.2'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.13.2'
     implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '3.0.3'
-    implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '3.0.3'
     implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '3.0.2'
 
     implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.0.0'
@@ -72,7 +73,6 @@ dependencies {
 
     //Swagger https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Getting-started -> Makes
     implementation 'io.swagger.core.v3:swagger-core-jakarta:2.1.13'
-    implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.13.1'
     implementation ('io.swagger.core.v3:swagger-jaxrs2-jakarta:2.1.13') {
         exclude group: 'com.fasterxml.jackson.jaxrs', module: 'jackson-jaxrs-json-provider'
     }

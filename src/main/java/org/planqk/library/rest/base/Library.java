@@ -8,7 +8,6 @@ import org.jabref.model.entry.BibEntry;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -23,7 +22,7 @@ import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
 import org.planqk.library.core.serialization.BibEntryAdapter;
 import org.planqk.library.rest.model.BibEntryDTO;
-import org.planqk.library.rest.model.LibraryEntries;
+import org.planqk.library.rest.model.BibEntries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,11 +47,10 @@ public class Library {
     public Response getLibraryEntries() {
         try {
             List<BibEntry> entries = libraryService.getLibraryEntries(libraryName);
-            Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
-            String json = gson.toJson(entries);
-            return Response.ok(new LibraryEntries(json))
+            return Response.ok(new BibEntries(entries))
                            .build();
         } catch (IOException e) {
+            LOGGER.error("Error retrieving entries.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
@@ -66,11 +64,12 @@ public class Library {
         try {
             libraryService.addEntryToLibrary(libraryName, bibEntry.entry);
         } catch (IOException e) {
+            LOGGER.error("Error creating entry.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
         }
-        return Response.ok("Entry was added to library " + libraryName + ".")
+        return Response.ok()
                        .build();
     }
 
@@ -84,6 +83,7 @@ public class Library {
                                .build();
             }
         } catch (IOException e) {
+            LOGGER.error("Error deleting library.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
@@ -100,9 +100,10 @@ public class Library {
                 return Response.ok(new BibEntryDTO(entry.get()))
                                .build();
             } else {
-                return Response.status(Response.Status.NOT_FOUND).entity("Could not find entry.").build();
+                return Response.status(Response.Status.NOT_FOUND).build();
             }
         } catch (IOException e) {
+            LOGGER.error("Error finding matching entry.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
@@ -122,9 +123,10 @@ public class Library {
             Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
             BibEntry updatedEntry = bibEntry.entry;
             libraryService.updateEntry(libraryName, citeKey, updatedEntry);
-            return Response.ok("Entry updated.")
+            return Response.ok()
                            .build();
         } catch (IOException e) {
+            LOGGER.error("Error updating entry.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
@@ -145,6 +147,7 @@ public class Library {
                                .build();
             }
         } catch (IOException e) {
+            LOGGER.error("Error deleting entry.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();

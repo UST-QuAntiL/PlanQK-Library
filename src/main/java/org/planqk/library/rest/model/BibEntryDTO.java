@@ -8,4 +8,8 @@ public class BibEntryDTO {
     public BibEntryDTO(BibEntry entry) {
         this.entry = entry;
     }
+
+    public BibEntryDTO(){
+
+    }
 }

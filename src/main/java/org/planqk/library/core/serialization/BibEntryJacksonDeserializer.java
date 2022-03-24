@@ -14,17 +14,18 @@ import org.jabref.model.entry.types.StandardEntryType;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BibEntryJacksonDeserializer extends JsonDeserializer<BibEntry> {
+    private final Logger LOGGER = LoggerFactory.getLogger(BibEntryJacksonDeserializer.class);
 
     @Override
-    public BibEntry deserialize(JsonParser in, DeserializationContext ctxt) throws IOException, JacksonException {
-        // Create new entry
+    public BibEntry deserialize(JsonParser in, DeserializationContext ctxt) throws IOException {
         BibEntry deserializedEntry = new BibEntry();
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(in);
@@ -68,5 +69,5 @@ public class BibEntryJacksonDeserializer extends JsonDeserializer<BibEntry> {
         }
         deserializedEntry.setChanged(true);
         return deserializedEntry;
-         }
+    }
 }

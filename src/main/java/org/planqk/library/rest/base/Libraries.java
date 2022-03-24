@@ -15,11 +15,14 @@ import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
 import org.planqk.library.rest.model.LibraryNames;
 import org.planqk.library.rest.model.NewLibraryConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("libraries")
 @Tag(name = "Libraries")
 public class Libraries {
     private final LibraryService libraryService;
+    private final Logger LOGGER = LoggerFactory.getLogger(Libraries.class);
 
     public Libraries() {
         libraryService = LibraryService.getInstance(ServerPropertyService.getInstance().getWorkingDirectory());
@@ -32,6 +35,7 @@ public class Libraries {
             return Response.ok(new LibraryNames(libraryService.getLibraryNames()))
                            .build();
         } catch (IOException e) {
+            LOGGER.error("Error retrieving library names.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
@@ -40,19 +44,19 @@ public class Libraries {
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    @Produces(MediaType.APPLICATION_JSON)
     public Response createNewLibrary(NewLibraryConfiguration newLibraryConfiguration) {
         if (libraryService.libraryExists(newLibraryConfiguration.getLibraryName())) {
-            return Response.status(Response.Status.CONFLICT).entity("The given library name is already in use.").build();
+            return Response.status(Response.Status.CONFLICT).build();
         }
         try {
             libraryService.createLibrary(newLibraryConfiguration);
         } catch (IOException e) {
+            LOGGER.error("Error creating library.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
         }
-        return Response.ok("Library with name " + newLibraryConfiguration.getLibraryName() + " created.")
+        return Response.ok()
                        .build();
     }
 

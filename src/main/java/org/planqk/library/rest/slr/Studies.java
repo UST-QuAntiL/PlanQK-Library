@@ -18,6 +18,9 @@ import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.StudyService;
 import org.planqk.library.rest.base.Library;
+import org.planqk.library.rest.model.CrawlStatus;
+import org.planqk.library.rest.model.StudyDTO;
+import org.planqk.library.rest.model.StudyNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,9 +39,10 @@ public class Studies {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStudyNames() {
         try {
-            return Response.ok(studyService.getStudyNames().toString())
+            return Response.ok(new StudyNames(studyService.getStudyNames()))
                            .build();
         } catch (IOException e) {
+            LOGGER.error("Error retrieving study names.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
@@ -47,15 +51,16 @@ public class Studies {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createStudy(Study study) {
+    public Response createStudy(StudyDTO study) {
         try {
-            if (studyService.studyExists(study.getTitle())) {
+            if (studyService.studyExists(study.studyDefinition.getTitle())) {
                 return Response.status(Response.Status.CONFLICT).entity("The given study name is already in use.").build();
             }
-            studyService.createStudy(study);
-            return Response.ok("Study directory was setup.")
+            studyService.createStudy(study.studyDefinition);
+            return Response.ok()
                            .build();
         } catch (IOException e) {
+            LOGGER.error("Error retrieving study names.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
@@ -72,9 +77,10 @@ public class Studies {
     public Response deleteStudy(@PathParam("studyName") String studyName) {
         try {
             studyService.deleteStudy(studyName);
-            return Response.ok("Study deleted.")
+            return Response.ok()
                            .build();
         } catch (IOException e) {
+            LOGGER.error("Error deleting study.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
@@ -102,12 +108,13 @@ public class Studies {
 
     @GET
     @Path("{studyName}/crawl")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getCrawlStatus(@PathParam("studyName") String studyName) {
         if (studyService.isCrawlRunning(studyName)) {
-            return Response.ok("Crawl currently running")
+            return Response.ok(new CrawlStatus(true))
                            .build();
         }
-        return Response.ok("No crawl currently running.")
+        return Response.ok(new CrawlStatus(true))
                        .build();
     }
 
@@ -117,13 +124,13 @@ public class Studies {
     public Response getStudyDefinition(@PathParam("studyName") String studyName) {
         try {
             return Response.ok("No crawl currently running.")
-                           .entity(studyService.getStudyDefinition(studyName))
+                           .entity(new StudyDTO(studyService.getStudyDefinition(studyName)))
                            .build();
         } catch (IOException e) {
+            LOGGER.error("Error retrieving study definition.", e);
             return Response.serverError()
                            .entity(e.getMessage())
                            .build();
         }
     }
 }
-//TODO: Test all endpoints here
