@@ -1,7 +1,5 @@
 package org.planqk.library.core.properties;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -22,28 +20,19 @@ public class ServerPropertyService {
     /**
      * Tries to determine the working directory of the library.
      * Uses the first path it finds when resolving in this order:
-     *  1. config.properties
-     *  2. Environment variable LIBRARY_WORKSPACE
-     *  3. Default User home with a new directory for the library
+     * 1. Environment variable LIBRARY_WORKSPACE
+     * 2. Default User home with a new directory for the library
      */
     private Properties loadProperties() {
-        try (InputStream stream = ServerPropertyService.class.getClassLoader().getResourceAsStream("config.properties")){
-            Properties properties = new Properties();
-            properties.load(stream);
-            if(properties.getProperty("workingDirectory") == null || properties.getProperty("workingDirectory").isBlank()) {
-                if (!(System.getenv("LIBRARY_WORKSPACE") == null || System.getenv("LIBRARY_WORKSPACE").isBlank())) {
-                    LOGGER.info("Environment Variable found, using defined directory: {}", System.getenv("LIBRARY_WORKSPACE"));
-                    properties.setProperty("workingDirectory", System.getenv("LIBRARY_WORKSPACE"));
-                } else {
-                    LOGGER.info("Working directory was not found in either the properties or the environment variables, falling back to default location: {}", System.getProperty("user.home") + "/planqk-library");
-                    properties.setProperty("workingDirectory", System.getProperty("user.home") + "/planqk-library");
-                }
-            }
-            return properties;
-        } catch (IOException e) {
-            LOGGER.error("Cannot load configuration file.");
-            throw new RuntimeException("Cannot load properties file.");
+        Properties properties = new Properties();
+        if (!(System.getenv("LIBRARY_WORKSPACE") == null || System.getenv("LIBRARY_WORKSPACE").isBlank())) {
+            LOGGER.info("Environment Variable found, using defined directory: {}", System.getenv("LIBRARY_WORKSPACE"));
+            properties.setProperty("workingDirectory", System.getenv("LIBRARY_WORKSPACE"));
+        } else {
+            LOGGER.info("Working directory was not found in either the properties or the environment variables, falling back to default location: {}", System.getProperty("user.home") + "/planqk-library");
+            properties.setProperty("workingDirectory", System.getProperty("user.home") + "/planqk-library");
         }
+        return properties;
     }
 
     public Path getWorkingDirectory() {
