@@ -53,11 +53,11 @@ public class Library {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createEntryInLibrary(BibEntryDTO bibEntry) throws IOException {
+    public Response addEntryToLibrary(BibEntryDTO bibEntry) throws IOException {
         try {
             libraryService.addEntryToLibrary(libraryName, bibEntry.entry);
         } catch (IOException e) {
-            LOGGER.error("Error creating entry.", e);
+            LOGGER.error("Error adding entry.", e);
             throw e;
         }
         return Response.ok()

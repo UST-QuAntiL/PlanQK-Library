@@ -97,6 +97,11 @@ public class LibraryService {
     }
 
     public void addEntryToLibrary(String libraryName, BibEntry newEntry) throws IOException {
+        // Enforce that a citation key is provided and that is is not part of the library already.
+        // TODO: Maybe generate citation key otherwise?
+        if (newEntry.getCitationKey().isEmpty()) {
+            throw new IllegalArgumentException("Entry does not contain a citation key");
+        }
         Path libraryPath = getLibraryPath(libraryName);
         BibDatabaseContext context;
         if (!Files.exists(libraryPath)) {
@@ -108,6 +113,9 @@ public class LibraryService {
         }
         // Required to get serialized
         newEntry.setChanged(true);
+        if(this.citationKeyAlreadyExists(libraryName, newEntry.getCitationKey().get())) {
+            throw new IllegalArgumentException("Library already contains an entry with that citation key.");
+        }
         context.getDatabase().insertEntry(newEntry);
         GeneralPreferences generalPreferences = JabRefPreferences.getInstance().getGeneralPreferences();
         SavePreferences savePreferences = JabRefPreferences.getInstance().getSavePreferences();
@@ -120,10 +128,15 @@ public class LibraryService {
     }
 
     public void updateEntry(String libraryName, String citeKey, BibEntry updatedEntry) throws IOException {
+        // Enforce that a citation key is provided and that is is not part of the library already.
+        // TODO: Maybe generate citation key otherwise?
+        if (updatedEntry.getCitationKey().isEmpty()) {
+            throw new IllegalArgumentException("Entry does not contain a citation key");
+        }
+        if (this.citationKeyAlreadyExists(libraryName, citeKey)) {
+            throw new IllegalArgumentException("Entry does not contain a citation key");
+        }
         this.deleteEntryByCiteKey(libraryName, citeKey);
-        // Required to get serialized
-        // TODO: Throw Exception if the key is already contained in the library (Integrity of key)
-        // TODO: Add readme: Enforces citekey uniqueness
         updatedEntry.setChanged(true);
         this.addEntryToLibrary(libraryName, updatedEntry);
     }
@@ -171,6 +184,10 @@ public class LibraryService {
                     })
                     .forEach(database -> merger.merge(result, database));
         return new ArrayList<>(result.getEntries());
+    }
+
+    private boolean citationKeyAlreadyExists(String libraryName, String citationKey) throws IOException {
+        return this.getLibraryEntryMatchingCiteKey(libraryName, citationKey).isPresent();
     }
 
     private Path getLibraryPath(String libraryName) {
