@@ -123,6 +123,8 @@ public class LibraryService {
     public void updateEntry(String libraryName, String citeKey, BibEntry updatedEntry) throws IOException {
         this.deleteEntryByCiteKey(libraryName, citeKey);
         // Required to get serialized
+        // TODO: Throw Exception if the key is already contained in the library (Integrity of key)
+        // TODO: Add readme: Enforces citekey uniqueness
         updatedEntry.setChanged(true);
         this.addEntryToLibrary(libraryName, updatedEntry);
     }

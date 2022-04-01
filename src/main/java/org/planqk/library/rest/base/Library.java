@@ -6,8 +6,6 @@ import java.util.Optional;
 
 import org.jabref.model.entry.BibEntry;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -20,7 +18,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
-import org.planqk.library.core.serialization.BibEntryAdapter;
 import org.planqk.library.rest.model.BibEntryDTO;
 import org.planqk.library.rest.model.BibEntries;
 import org.slf4j.Logger;
@@ -60,7 +57,6 @@ public class Library {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createEntryInLibrary(BibEntryDTO bibEntry) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
         try {
             libraryService.addEntryToLibrary(libraryName, bibEntry.entry);
         } catch (IOException e) {
@@ -120,7 +116,6 @@ public class Library {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEntry(@PathParam("citeKey") String citeKey, BibEntryDTO bibEntry) {
         try {
-            Gson gson = new GsonBuilder().registerTypeAdapter(BibEntry.class, new BibEntryAdapter()).create();
             BibEntry updatedEntry = bibEntry.entry;
             libraryService.updateEntry(libraryName, citeKey, updatedEntry);
             return Response.ok()

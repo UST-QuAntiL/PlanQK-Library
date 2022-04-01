@@ -3,7 +3,6 @@ package org.planqk.library.rest.slr;
 import java.io.IOException;
 
 import org.jabref.logic.importer.ParseException;
-import org.jabref.model.study.Study;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
@@ -67,6 +66,7 @@ public class Studies {
         }
     }
 
+    // TODO: How can we remove the /results
     @Path("{studyName}/results")
     public Library getStudyResults(@PathParam("studyName") String studyName) {
         return new Library(studyService.getStudyPath(studyName), "studyResult");
@@ -123,7 +123,7 @@ public class Studies {
     @Path("{studyName}/studyDefinition")
     public Response getStudyDefinition(@PathParam("studyName") String studyName) {
         try {
-            return Response.ok("No crawl currently running.")
+            return Response.ok()
                            .entity(new StudyDTO(studyService.getStudyDefinition(studyName)))
                            .build();
         } catch (IOException e) {
@@ -133,4 +133,6 @@ public class Studies {
                            .build();
         }
     }
+
+    // TODO: Add put
 }

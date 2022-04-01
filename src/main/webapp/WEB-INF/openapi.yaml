@@ -1,4 +1,10 @@
 prettyPrint: true
+# For the correct scanning behaviour look at: https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration#resource-scanning:
+resourceClasses:
+  - org.planqk.library.rest.Root
+  - org.planqk.library.rest.base.Accumulation
+  - org.planqk.library.rest.base.Libraries
+  - org.planqk.library.rest.slr.Studies
 cacheTTL: 0
 openapi:
   info:
