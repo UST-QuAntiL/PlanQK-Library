@@ -1,11 +1,9 @@
 package org.planqk.library.core.repository;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +12,7 @@ import java.util.stream.Collectors;
 import org.jabref.logic.crawler.Crawler;
 import org.jabref.logic.crawler.StudyYamlParser;
 import org.jabref.logic.git.SlrGitHandler;
-import org.jabref.logic.importer.OpenDatabase;
 import org.jabref.logic.importer.ParseException;
-import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.BibEntryTypesManager;
 import org.jabref.model.study.Study;
 import org.jabref.model.util.DummyFileUpdateMonitor;
@@ -29,11 +25,10 @@ import org.slf4j.LoggerFactory;
 //TODO: Write tests for these
 public class StudyService {
     private static final Map<Path, StudyService> instances = new HashMap<>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(StudyService.class);
     // Contains all running tasks,
     private final Map<String, CrawlTask> runningCrawls = new HashMap<>();
     private Path studiesDirectory;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(StudyService.class);
 
     /**
      * Returns a study service instance for the selected working directory
@@ -75,8 +70,13 @@ public class StudyService {
         parser.writeStudyYamlFile(study, studiesDirectory.resolve(Paths.get(study.getTitle(), "study.yml")));
     }
 
-    public void deleteStudy(String studyName) throws IOException {
-        FileUtils.deleteDirectory(studiesDirectory.resolve(Paths.get(studyName)).toFile());
+    public boolean deleteStudy(String studyName) throws IOException {
+        Path study = studiesDirectory.resolve(Paths.get(studyName));
+        if (Files.notExists(study)) {
+            return false;
+        }
+        FileUtils.deleteDirectory(study.toFile());
+        return true;
     }
 
     public boolean studyExists(String studyName) {
@@ -90,13 +90,13 @@ public class StudyService {
      * @throws ParseException Occurs if the study definition file is malformed
      */
     public synchronized Boolean startCrawl(String studyName) throws IOException, ParseException {
-            if (runningCrawls.containsKey(studyName)) {
-                return false;
-            }
-            Path studyDirectory = studiesDirectory.resolve(Paths.get(studyName));
-            CrawlTask crawl = new CrawlTask(new Crawler(studyDirectory, new SlrGitHandler(studyDirectory), JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), JabRefPreferences.getInstance().getSavePreferences(), new BibEntryTypesManager(), new DummyFileUpdateMonitor()));
-            runningCrawls.put(studyName, crawl);
-            new Thread(crawl).start();
+        if (runningCrawls.containsKey(studyName)) {
+            return false;
+        }
+        Path studyDirectory = studiesDirectory.resolve(Paths.get(studyName));
+        CrawlTask crawl = new CrawlTask(new Crawler(studyDirectory, new SlrGitHandler(studyDirectory), JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), JabRefPreferences.getInstance().getSavePreferences(), new BibEntryTypesManager(), new DummyFileUpdateMonitor()));
+        runningCrawls.put(studyName, crawl);
+        new Thread(crawl).start();
         return true;
     }
 

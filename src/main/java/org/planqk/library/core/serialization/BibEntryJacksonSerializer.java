@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
 
 public class BibEntryJacksonSerializer extends StdSerializer<BibEntry> {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(BibEntryJacksonSerializer.class);
     private static final String JSON_TYPE = "entrytype";
     private static final String JSON_KEY = "citekey";
+    private final Logger LOGGER = LoggerFactory.getLogger(BibEntryJacksonSerializer.class);
 
     public BibEntryJacksonSerializer(Class<BibEntry> t) {
         super(t);
@@ -60,5 +60,4 @@ public class BibEntryJacksonSerializer extends StdSerializer<BibEntry> {
         }
         writer.writeEndObject();
     }
-
 }

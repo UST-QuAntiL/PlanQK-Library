@@ -50,7 +50,8 @@ public class StudyServiceTest {
         service.createStudy(getStudyDefinition("TestStudy"));
         assertTrue(Files.isDirectory(studiesDir.resolve("TestStudy")));
 
-        service.deleteStudy("TestStudy");
+        assertTrue(service.deleteStudy("TestStudy"));
+        assertFalse(service.deleteStudy("TestStudy"));
         assertFalse(Files.exists(studiesDir.resolve("TestStudy")));
     }
 

@@ -27,8 +27,8 @@ import org.slf4j.LoggerFactory;
 @Path("studies")
 @Tag(name = "Systematic Literature Review")
 public class Studies {
-    private final StudyService studyService;
     private static final Logger LOGGER = LoggerFactory.getLogger(Studies.class);
+    private final StudyService studyService;
 
     public Studies() {
         studyService = StudyService.getInstance(ServerPropertyService.getInstance().getWorkingDirectory());
@@ -36,21 +36,19 @@ public class Studies {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStudyNames() {
+    public Response getStudyNames() throws IOException {
         try {
             return Response.ok(new StudyNames(studyService.getStudyNames()))
                            .build();
         } catch (IOException e) {
             LOGGER.error("Error retrieving study names.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createStudy(StudyDTO study) {
+    public Response createStudy(StudyDTO study) throws IOException {
         try {
             if (studyService.studyExists(study.studyDefinition.getTitle())) {
                 return Response.status(Response.Status.CONFLICT).entity("The given study name is already in use.").build();
@@ -60,9 +58,7 @@ public class Studies {
                            .build();
         } catch (IOException e) {
             LOGGER.error("Error retrieving study names.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
     }
 
@@ -74,22 +70,24 @@ public class Studies {
 
     @DELETE
     @Path("{studyName}")
-    public Response deleteStudy(@PathParam("studyName") String studyName) {
+    public Response deleteStudy(@PathParam("studyName") String studyName) throws IOException {
         try {
-            studyService.deleteStudy(studyName);
-            return Response.ok()
+
+            if (studyService.deleteStudy(studyName)) {
+                return Response.ok()
+                               .build();
+            }
+            return Response.status(Response.Status.NOT_FOUND)
                            .build();
         } catch (IOException e) {
             LOGGER.error("Error deleting study.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
     }
 
     @POST
     @Path("{studyName}/crawl")
-    public Response crawlStudy(@PathParam("studyName") String studyName) {
+    public Response crawlStudy(@PathParam("studyName") String studyName) throws IOException, ParseException {
         try {
             Boolean crawlStarted = studyService.startCrawl(studyName);
             if (crawlStarted) {
@@ -100,9 +98,7 @@ public class Studies {
                            .build();
         } catch (IOException | ParseException e) {
             LOGGER.error("Error during crawling", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
     }
 
@@ -121,16 +117,14 @@ public class Studies {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{studyName}/studyDefinition")
-    public Response getStudyDefinition(@PathParam("studyName") String studyName) {
+    public Response getStudyDefinition(@PathParam("studyName") String studyName) throws IOException {
         try {
             return Response.ok()
                            .entity(new StudyDTO(studyService.getStudyDefinition(studyName)))
                            .build();
         } catch (IOException e) {
             LOGGER.error("Error retrieving study definition.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
     }
 

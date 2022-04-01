@@ -3,9 +3,9 @@ package org.planqk.library.rest.base;
 import java.io.IOException;
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.jabref.model.entry.BibEntry;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -29,16 +29,14 @@ public class Accumulation {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllEntries() {
+    public Response getAllEntries() throws IOException {
         try {
             List<BibEntry> entries = libraryService.getAllEntries();
             return Response.ok(new BibEntries(entries))
                            .build();
         } catch (IOException e) {
             LOGGER.error("Error accumulating all entries.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
     }
 }

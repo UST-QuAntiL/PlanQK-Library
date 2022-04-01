@@ -33,9 +33,8 @@ import org.slf4j.LoggerFactory;
 
 public class LibraryService {
     private static final Map<Path, LibraryService> instances = new HashMap<>();
-    private Path workingDirectory;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(LibraryService.class);
+    private Path workingDirectory;
 
     private LibraryService(Path workingDirectory) {
         this.workingDirectory = workingDirectory;

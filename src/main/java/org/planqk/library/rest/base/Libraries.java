@@ -30,31 +30,29 @@ public class Libraries {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLibraryNames() {
+    public Response getLibraryNames() throws IOException {
         try {
             return Response.ok(new LibraryNames(libraryService.getLibraryNames()))
                            .build();
         } catch (IOException e) {
             LOGGER.error("Error retrieving library names.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response createNewLibrary(NewLibraryConfiguration newLibraryConfiguration) {
+    public Response createNewLibrary(NewLibraryConfiguration newLibraryConfiguration) throws IOException {
         if (libraryService.libraryExists(newLibraryConfiguration.getLibraryName())) {
-            return Response.status(Response.Status.CONFLICT).build();
+            return Response.status(Response.Status.CONFLICT)
+                           .entity("The given library name is taken.")
+                           .build();
         }
         try {
             libraryService.createLibrary(newLibraryConfiguration);
         } catch (IOException e) {
             LOGGER.error("Error creating library.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
         return Response.ok()
                        .build();

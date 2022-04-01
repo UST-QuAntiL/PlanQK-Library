@@ -8,13 +8,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ServerPropertyService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServerPropertyService.class);
     private static ServerPropertyService instance;
     private final Properties serverProperties;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServerPropertyService.class);
-
     private ServerPropertyService() {
         serverProperties = loadProperties();
+    }
+
+    public static ServerPropertyService getInstance() {
+        if (instance == null) {
+            instance = new ServerPropertyService();
+        }
+        return instance;
     }
 
     /**
@@ -37,12 +43,5 @@ public class ServerPropertyService {
 
     public Path getWorkingDirectory() {
         return Paths.get(serverProperties.getProperty("workingDirectory"));
-    }
-
-    public static ServerPropertyService getInstance() {
-        if (instance == null) {
-            instance = new ServerPropertyService();
-        }
-        return instance;
     }
 }

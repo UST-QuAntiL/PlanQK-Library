@@ -18,16 +18,15 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
-import org.planqk.library.rest.model.BibEntryDTO;
 import org.planqk.library.rest.model.BibEntries;
+import org.planqk.library.rest.model.BibEntryDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Library {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Library.class);
     private final LibraryService libraryService;
     private final String libraryName;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Library.class);
 
     public Library(String libraryName) {
         this.libraryName = libraryName;
@@ -41,55 +40,49 @@ public class Library {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLibraryEntries() {
+    public Response getLibraryEntries() throws IOException {
         try {
             List<BibEntry> entries = libraryService.getLibraryEntries(libraryName);
             return Response.ok(new BibEntries(entries))
                            .build();
         } catch (IOException e) {
             LOGGER.error("Error retrieving entries.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createEntryInLibrary(BibEntryDTO bibEntry) {
+    public Response createEntryInLibrary(BibEntryDTO bibEntry) throws IOException {
         try {
             libraryService.addEntryToLibrary(libraryName, bibEntry.entry);
         } catch (IOException e) {
             LOGGER.error("Error creating entry.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
         return Response.ok()
                        .build();
     }
 
     @DELETE
-    public Response deleteLibrary() {
+    public Response deleteLibrary() throws IOException {
         try {
             if (libraryService.deleteLibrary(libraryName)) {
                 return Response.ok().build();
             } else {
-                return Response.status(Response.Status.GONE)
+                return Response.status(Response.Status.NOT_FOUND)
                                .build();
             }
         } catch (IOException e) {
             LOGGER.error("Error deleting library.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
     }
 
     @GET
     @Path("{citeKey}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBibEntryMatchingCiteKey(@PathParam("citeKey") String citeKey) {
+    public Response getBibEntryMatchingCiteKey(@PathParam("citeKey") String citeKey) throws IOException {
         try {
             Optional<BibEntry> entry = libraryService.getLibraryEntryMatchingCiteKey(libraryName, citeKey);
             if (entry.isPresent()) {
@@ -100,9 +93,7 @@ public class Library {
             }
         } catch (IOException e) {
             LOGGER.error("Error finding matching entry.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
     }
 
@@ -114,7 +105,7 @@ public class Library {
     @PUT
     @Path("{citeKey}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateEntry(@PathParam("citeKey") String citeKey, BibEntryDTO bibEntry) {
+    public Response updateEntry(@PathParam("citeKey") String citeKey, BibEntryDTO bibEntry) throws IOException {
         try {
             BibEntry updatedEntry = bibEntry.entry;
             libraryService.updateEntry(libraryName, citeKey, updatedEntry);
@@ -122,30 +113,26 @@ public class Library {
                            .build();
         } catch (IOException e) {
             LOGGER.error("Error updating entry.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
     }
 
     @DELETE
     @Path("{citeKey}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteEntryFromLibrary(@PathParam("citeKey") String citeKey) {
+    public Response deleteEntryFromLibrary(@PathParam("citeKey") String citeKey) throws IOException {
         try {
             boolean deleted = libraryService.deleteEntryByCiteKey(libraryName, citeKey);
             if (deleted) {
-                return Response.ok("Entry deleted.")
+                return Response.ok()
                                .build();
             } else {
-                return Response.ok("Either the database does not exist, or there was no entry with the specified citation key in it.")
+                return Response.status(Response.Status.NOT_FOUND)
                                .build();
             }
         } catch (IOException e) {
             LOGGER.error("Error deleting entry.", e);
-            return Response.serverError()
-                           .entity(e.getMessage())
-                           .build();
+            throw e;
         }
     }
 }

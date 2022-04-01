@@ -1,7 +1,5 @@
 package org.planqk.library.rest.model;
 
-import com.fasterxml.jackson.annotation.JacksonAnnotation;
-
 public class NewLibraryConfiguration {
     public String libraryName;
 
