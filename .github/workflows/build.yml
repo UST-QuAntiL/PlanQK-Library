@@ -47,7 +47,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
     if: |
-      false &&
       (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags'))
     steps:
       - name: Checkout
@@ -60,13 +59,13 @@ jobs:
           DOCKER_IMAGE=planqk/planqk-library
           VERSION=m1test
           SHORTREF=${GITHUB_SHA::8}
-          
+
           # If this is git tag, use the tag name
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION=${GITHUB_REF#refs/tags/v}
           fi
           TAGS="${DOCKER_IMAGE}:${VERSION},${DOCKER_IMAGE}:${SHORTREF}"
-          
+
           # Set output parameters.
           echo ::set-output name=tags::${TAGS}
       - name: Set up Docker Buildx
@@ -80,7 +79,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: Dockerfile.noBuild
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.vars.outputs.tags }}
