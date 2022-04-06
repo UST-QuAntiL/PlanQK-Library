@@ -2,10 +2,10 @@ package org.planqk.library.rest.model;
 
 import org.jabref.model.entry.BibEntry;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.Hidden;
 
 public class BibEntryDTO {
-    @JsonIgnore
+    @Hidden
     public BibEntry entry;
 
     public BibEntryDTO(BibEntry entry) {
