@@ -106,11 +106,7 @@ public class Studies {
     @Path("{studyName}/crawl")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCrawlStatus(@PathParam("studyName") String studyName) {
-        if (studyService.isCrawlRunning(studyName)) {
-            return Response.ok(new CrawlStatus(true))
-                           .build();
-        }
-        return Response.ok(new CrawlStatus(true))
+        return Response.ok(new CrawlStatus(studyService.isCrawlRunning(studyName)))
                        .build();
     }
 
