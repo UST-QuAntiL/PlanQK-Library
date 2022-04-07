@@ -14,7 +14,7 @@ look into [Studies](#Studies).
 
 ## Libraries
 
-###**Path:** /libraries
+### **Path:** /libraries
 
 
 - **GET:** Provides a list of existing libraries within the working directory.
@@ -36,7 +36,7 @@ so names returned by the GET method above are not allowed and will result in an 
   
 ##Library
 
-###**Path:** /libraries/{libraryName}
+### **Path:** /libraries/{libraryName}
 
 
 - **GET:** Returns all entries contained in the library with the provided name. Note that the bib file extension can be **omitted**.\
@@ -80,7 +80,7 @@ Note that citation keys are case-sensitive.
     ```
 - **DELETE:** Delete the library with the provided name.
 
-###**Path:** /libraries/{libraryName}/{citeKey}
+### **Path:** /libraries/{libraryName}/{citeKey}
 
 - **GET:** Returns the entry with the provided citation key from in the library with the provided name. Note that citation keys are case-sensitive.
   - Example response:
@@ -117,7 +117,7 @@ Note that citation keys are case-sensitive.
 
 ## Studies
 
-###**Path:** /studies
+### **Path:** /studies
 
 - **GET:** Returns a list of all studies within the studies' directory in the work-directory.
   - Example response:
@@ -161,13 +161,13 @@ Note that citation keys are case-sensitive.
       }
     }
     ```
-###**Path:** /studies/{studyName}
+### **Path:** /studies/{studyName}
 - **Delete:** Deletes the study and the corresponding directory.
 
-###**Path:** /studies/{studyName}/results
+### **Path:** /studies/{studyName}/results
 - This endpoint corresponds to the library endpoint with the libraryName being results, the same operations as there can be used.
 
-###**Path:** /studies/{studyName}/crawl
+### **Path:** /studies/{studyName}/crawl
 - **GET:** Returns whether a crawl is currently running for the specified study.
   - Example response:
     ```json
