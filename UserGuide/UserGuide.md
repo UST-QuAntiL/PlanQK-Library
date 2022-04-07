@@ -1,8 +1,8 @@
 # API User guide
 
 This document describes how to use each REST API endpoint exposed by this server.\
-To create libraries or get a list of existing libraries look into `Libraries`.\
-To interact with a specific library, by creating, retrieving or modifing entries, look into `Library`.
+To create libraries or get a list of existing libraries look into [Libraries](#Libraries).\
+To interact with a specific library, by creating, retrieving or modifying entries, look into [Library](#Library).
 
 To:
  - Create a new study
@@ -10,7 +10,7 @@ To:
  - Start an automated search for a given study
  - Retrieve or interact with the results of a study
  
-look into `Studies`.
+look into [Studies](#Studies).
 
 ## Libraries
 
@@ -83,7 +83,7 @@ Note that citation keys are case-sensitive.
 
 ###**Path:** /libraries/{libraryName}/{citeKey}
 
-- **GET:** Returns the entry with the provided citation key from in the library with the provided name. Note that citation keys are case sensitive.
+- **GET:** Returns the entry with the provided citation key from in the library with the provided name. Note that citation keys are case-sensitive.
   - Example response:
     ``` json 
     {
@@ -120,7 +120,7 @@ Note that citation keys are case-sensitive.
 
 ###**Path:** /studies
 
-- **GET:** Returns a list of all studies within the studies directory in the workdirectory.
+- **GET:** Returns a list of all studies within the studies' directory in the work-directory.
   - Example response:
     ``` json 
     {
@@ -166,7 +166,7 @@ Note that citation keys are case-sensitive.
 - **Delete:** Deletes the study and the corresponding directory.
 
 ###**Path:** /studies/{studyName}/results
-- This endpoints corresponds to the library endpoint with the libraryName being results, the same operations as there can be used.
+- This endpoint corresponds to the library endpoint with the libraryName being results, the same operations as there can be used.
 
 ###**Path:** /studies/{studyName}/crawl
 - **GET:** Returns whether a crawl is currently running for the specified study.
