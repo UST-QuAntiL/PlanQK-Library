@@ -34,7 +34,7 @@ so names returned by the GET method above are not allowed and will result in an 
     }
     ```
   
-##Library
+## Library
 
 ### **Path:** /libraries/{libraryName}
 
