@@ -2,7 +2,7 @@
 
 This document describes how to use each REST API endpoint exposed by this server.\
 To create libraries or get a list of existing libraries look into `Libraries`.\
-To interact with a specific library, by creating, retrieving or modifing entries, look into `Library`.\
+To interact with a specific library, by creating, retrieving or modifing entries, look into `Library`.
 
 To:
  - Create a new study
@@ -21,7 +21,7 @@ look into `Studies`.
   - Example response:
       ``` json
       {
-          "libraryNames" : [ "arxiv.bib", "ieeexplore.bib" ]\
+          "libraryNames" : [ "arxiv.bib", "ieeexplore.bib" ]
       }
       ```
 - **POST:** Create a new library with the given name, provided in the request body, note that names have to be unique, 
@@ -39,7 +39,8 @@ so names returned by the GET method above are not allowed and will result in an 
 ###**Path:** /libraries/{libraryName}
 
 
-- **GET:** Returns all entries contained in the library with the provided name. Note that the bib file extension can be **omitted**.
+- **GET:** Returns all entries contained in the library with the provided name. Note that the bib file extension can be **omitted**.\
+Note that library names are case-sensitive!
   - Example response (note that there are many more possible fields such as `abstract`):
     ``` json 
     {
@@ -63,7 +64,7 @@ so names returned by the GET method above are not allowed and will result in an 
     
 - **POST:** Adds a new entry provided in the request body to the library. 
 Note that the citation key in the provided must be non-blank and unique within the library. 
-Note that citation keys are case sensitive.
+Note that citation keys are case-sensitive.
   - Example request body:
     ``` json 
     {
@@ -99,7 +100,7 @@ Note that citation keys are case sensitive.
 
 - **PUT:** Updates the existing entry with the provided citation key with the entry provided in the request body. 
 Note that the citation key in the provided must be non-blank and unique within the library.
-Note that citation keys are case sensitive.
+Note that citation keys are case-sensitive.
   - Example request body:
     ``` json 
     {
