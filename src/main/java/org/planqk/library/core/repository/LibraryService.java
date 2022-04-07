@@ -133,9 +133,6 @@ public class LibraryService {
         if (updatedEntry.getCitationKey().isEmpty()) {
             throw new IllegalArgumentException("Entry does not contain a citation key");
         }
-        if (this.citationKeyAlreadyExists(libraryName, citeKey)) {
-            throw new IllegalArgumentException("Entry does not contain a citation key");
-        }
         this.deleteEntryByCiteKey(libraryName, citeKey);
         updatedEntry.setChanged(true);
         this.addEntryToLibrary(libraryName, updatedEntry);
