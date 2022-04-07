@@ -79,7 +79,6 @@ Note that citation keys are case-sensitive.
     }
     ```
 - **DELETE:** Delete the library with the provided name.
-- 
 
 ###**Path:** /libraries/{libraryName}/{citeKey}
 
