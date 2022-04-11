@@ -2,6 +2,10 @@ package org.planqk.library.rest.base;
 
 import java.io.IOException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -30,10 +34,16 @@ public class Libraries {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Update an existing pet",
+            responses = {
+                    @ApiResponse(
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = LibraryNames.class)))}
+    )
     public Response getLibraryNames() throws IOException {
         try {
             return Response.ok(new LibraryNames(libraryService.getLibraryNames()))
-                           .build();
+                    .build();
         } catch (IOException e) {
             LOGGER.error("Error retrieving library names.", e);
             throw e;
