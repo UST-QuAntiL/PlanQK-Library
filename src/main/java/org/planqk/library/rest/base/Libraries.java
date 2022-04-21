@@ -1,6 +1,7 @@
 package org.planqk.library.rest.base;
 
 import java.io.IOException;
+import java.util.List;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
@@ -13,8 +14,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
-import org.planqk.library.rest.model.LibraryNames;
-import org.planqk.library.rest.model.NewLibraryConfiguration;
+import org.planqk.library.rest.model.NewLibraryDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,10 +30,9 @@ public class Libraries {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLibraryNames() throws IOException {
+    public List<String> getLibraryNames() throws IOException {
         try {
-            return Response.ok(new LibraryNames(libraryService.getLibraryNames()))
-                           .build();
+            return libraryService.getLibraryNames();
         } catch (IOException e) {
             LOGGER.error("Error retrieving library names.", e);
             throw e;
@@ -42,7 +41,7 @@ public class Libraries {
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response createNewLibrary(NewLibraryConfiguration newLibraryConfiguration) throws IOException {
+    public Response createNewLibrary(NewLibraryDTO newLibraryConfiguration) throws IOException {
         if (libraryService.libraryExists(newLibraryConfiguration.getLibraryName())) {
             return Response.status(Response.Status.CONFLICT)
                            .entity("The given library name is taken.")

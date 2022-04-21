@@ -2,6 +2,7 @@ package org.planqk.library.rest.base;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jabref.model.entry.BibEntry;
 
@@ -13,7 +14,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
-import org.planqk.library.rest.model.BibEntries;
+import org.planqk.library.core.serialization.BibEntryMapper;
+import org.planqk.library.rest.model.Library;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,11 +31,10 @@ public class Accumulation {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllEntries() throws IOException {
+    public Library getAllEntries() throws IOException {
         try {
             List<BibEntry> entries = libraryService.getAllEntries();
-            return Response.ok(new BibEntries(entries))
-                           .build();
+            return new Library(entries.parallelStream().map(BibEntryMapper::map).collect(Collectors.toList()));
         } catch (IOException e) {
             LOGGER.error("Error accumulating all entries.", e);
             throw e;

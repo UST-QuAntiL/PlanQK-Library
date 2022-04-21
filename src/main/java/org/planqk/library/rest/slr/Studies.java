@@ -1,6 +1,7 @@
 package org.planqk.library.rest.slr;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.jabref.logic.importer.ParseException;
 
@@ -19,11 +20,9 @@ import org.planqk.library.core.repository.StudyService;
 import org.planqk.library.rest.base.Library;
 import org.planqk.library.rest.model.CrawlStatus;
 import org.planqk.library.rest.model.StudyDTO;
-import org.planqk.library.rest.model.StudyNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//TODO: Test all endpoints here
 @Path("studies")
 @Tag(name = "Systematic Literature Review")
 public class Studies {
@@ -36,10 +35,9 @@ public class Studies {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getStudyNames() throws IOException {
+    public List<String> getStudyNames() throws IOException {
         try {
-            return Response.ok(new StudyNames(studyService.getStudyNames()))
-                           .build();
+            return studyService.getStudyNames();
         } catch (IOException e) {
             LOGGER.error("Error retrieving study names.", e);
             throw e;
@@ -72,7 +70,6 @@ public class Studies {
     @Path("{studyName}")
     public Response deleteStudy(@PathParam("studyName") String studyName) throws IOException {
         try {
-
             if (studyService.deleteStudy(studyName)) {
                 return Response.ok()
                                .build();
@@ -87,15 +84,10 @@ public class Studies {
 
     @POST
     @Path("{studyName}/crawl")
-    public Response crawlStudy(@PathParam("studyName") String studyName) throws IOException, ParseException {
+    public void crawlStudy(@PathParam("studyName") String studyName) throws IOException, ParseException {
         try {
-            Boolean crawlStarted = studyService.startCrawl(studyName);
-            if (crawlStarted) {
-                return Response.ok("Crawl started.")
-                               .build();
-            }
-            return Response.ok("Crawl was already running, no new run started.")
-                           .build();
+            // Note: This only starts a new crawl if no other crawl is currently running for this study
+            studyService.startCrawl(studyName);
         } catch (IOException | ParseException e) {
             LOGGER.error("Error during crawling", e);
             throw e;
@@ -105,24 +97,19 @@ public class Studies {
     @GET
     @Path("{studyName}/crawl")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCrawlStatus(@PathParam("studyName") String studyName) {
-        return Response.ok(new CrawlStatus(studyService.isCrawlRunning(studyName)))
-                       .build();
+    public CrawlStatus getCrawlStatus(@PathParam("studyName") String studyName) {
+        return new CrawlStatus(studyService.isCrawlRunning(studyName));
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{studyName}/studyDefinition")
-    public Response getStudyDefinition(@PathParam("studyName") String studyName) throws IOException {
+    public StudyDTO getStudyDefinition(@PathParam("studyName") String studyName) throws IOException {
         try {
-            return Response.ok()
-                           .entity(new StudyDTO(studyService.getStudyDefinition(studyName)))
-                           .build();
+            return new StudyDTO(studyService.getStudyDefinition(studyName));
         } catch (IOException e) {
             LOGGER.error("Error retrieving study definition.", e);
             throw e;
         }
     }
-
-    // TODO: Add put
 }

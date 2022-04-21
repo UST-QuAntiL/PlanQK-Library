@@ -3,6 +3,7 @@ package org.planqk.library.rest.base;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.jabref.model.entry.BibEntry;
 
@@ -18,7 +19,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
-import org.planqk.library.rest.model.BibEntries;
+import org.planqk.library.core.serialization.BibEntryMapper;
 import org.planqk.library.rest.model.BibEntryDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +41,10 @@ public class Library {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLibraryEntries() throws IOException {
+    public List<BibEntryDTO> getLibraryEntries() throws IOException {
         try {
             List<BibEntry> entries = libraryService.getLibraryEntries(libraryName);
-            return Response.ok(new BibEntries(entries))
-                           .build();
+            return entries.parallelStream().map(BibEntryMapper::map).collect(Collectors.toList());
         } catch (IOException e) {
             LOGGER.error("Error retrieving entries.", e);
             throw e;
@@ -53,15 +53,13 @@ public class Library {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addEntryToLibrary(BibEntryDTO bibEntry) throws IOException {
+    public void addEntryToLibrary(BibEntryDTO bibEntry) throws IOException {
         try {
-            libraryService.addEntryToLibrary(libraryName, bibEntry.entry);
+            libraryService.addEntryToLibrary(libraryName, BibEntryMapper.map(bibEntry));
         } catch (IOException e) {
             LOGGER.error("Error adding entry.", e);
             throw e;
         }
-        return Response.ok()
-                       .build();
     }
 
     @DELETE
@@ -86,7 +84,7 @@ public class Library {
         try {
             Optional<BibEntry> entry = libraryService.getLibraryEntryMatchingCiteKey(libraryName, citeKey);
             if (entry.isPresent()) {
-                return Response.ok(new BibEntryDTO(entry.get()))
+                return Response.ok(BibEntryMapper.map(entry.get()))
                                .build();
             } else {
                 return Response.status(Response.Status.NOT_FOUND).build();
@@ -105,12 +103,10 @@ public class Library {
     @PUT
     @Path("{citeKey}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateEntry(@PathParam("citeKey") String citeKey, BibEntryDTO bibEntry) throws IOException {
+    public void updateEntry(@PathParam("citeKey") String citeKey, BibEntryDTO bibEntry) throws IOException {
         try {
-            BibEntry updatedEntry = bibEntry.entry;
+            BibEntry updatedEntry = BibEntryMapper.map(bibEntry);
             libraryService.updateEntry(libraryName, citeKey, updatedEntry);
-            return Response.ok()
-                           .build();
         } catch (IOException e) {
             LOGGER.error("Error updating entry.", e);
             throw e;
@@ -122,8 +118,8 @@ public class Library {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteEntryFromLibrary(@PathParam("citeKey") String citeKey) throws IOException {
         try {
-            boolean deleted = libraryService.deleteEntryByCiteKey(libraryName, citeKey);
-            if (deleted) {
+            boolean foundAndDeleted = libraryService.deleteEntryByCiteKey(libraryName, citeKey);
+            if (foundAndDeleted) {
                 return Response.ok()
                                .build();
             } else {

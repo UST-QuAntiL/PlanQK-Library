@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.jabref.model.entry.BibEntry;
 
-public class BibEntries {
-    public List<BibEntry> bibEntries;
+public class Library {
+    public List<BibEntryDTO> bibEntries;
 
-    public BibEntries(List<BibEntry> bibEntries) {
+    public Library(List<BibEntryDTO> bibEntries) {
         this.bibEntries = bibEntries;
     }
 }

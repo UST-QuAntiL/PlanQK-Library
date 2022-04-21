@@ -22,7 +22,6 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//TODO: Write tests for these
 public class StudyService {
     private static final Map<Path, StudyService> instances = new HashMap<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(StudyService.class);
@@ -86,18 +85,16 @@ public class StudyService {
     /**
      * Starts a crawl for a specific study
      *
-     * @return Returns whether a crawl was started, returns false if a crawl for the specified study is already running
      * @throws ParseException Occurs if the study definition file is malformed
      */
-    public synchronized Boolean startCrawl(String studyName) throws IOException, ParseException {
+    public synchronized void startCrawl(String studyName) throws IOException, ParseException {
         if (runningCrawls.containsKey(studyName)) {
-            return false;
+            return;
         }
         Path studyDirectory = studiesDirectory.resolve(Paths.get(studyName));
         CrawlTask crawl = new CrawlTask(new Crawler(studyDirectory, new SlrGitHandler(studyDirectory), JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), JabRefPreferences.getInstance().getSavePreferences(), new BibEntryTypesManager(), new DummyFileUpdateMonitor()));
         runningCrawls.put(studyName, crawl);
         new Thread(crawl).start();
-        return true;
     }
 
     /**

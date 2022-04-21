@@ -27,7 +27,7 @@ import org.jabref.model.util.FileUpdateMonitor;
 import org.jabref.preferences.GeneralPreferences;
 import org.jabref.preferences.JabRefPreferences;
 
-import org.planqk.library.rest.model.NewLibraryConfiguration;
+import org.planqk.library.rest.model.NewLibraryDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +61,7 @@ public class LibraryService {
                     .collect(Collectors.toList());
     }
 
-    public void createLibrary(NewLibraryConfiguration newLibraryConfiguration) throws IOException {
+    public void createLibrary(NewLibraryDTO newLibraryConfiguration) throws IOException {
         Files.createFile(getLibraryPath(newLibraryConfiguration.getLibraryName()));
     }
 

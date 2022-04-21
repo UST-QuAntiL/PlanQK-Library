@@ -27,8 +27,6 @@ public class ObjectMapperContextResolver implements ContextResolver<ObjectMapper
 
     private ObjectMapper createObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new SimpleModule().addDeserializer(BibEntry.class, new BibEntryJacksonDeserializer())
-                                                .addSerializer(new BibEntryJacksonSerializer(BibEntry.class)));
         mapper.registerModule(new JavaTimeModule());
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
