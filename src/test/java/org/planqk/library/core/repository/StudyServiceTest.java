@@ -3,7 +3,10 @@ package org.planqk.library.core.repository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jabref.logic.importer.ParseException;
 import org.jabref.model.study.Study;
@@ -39,8 +42,8 @@ public class StudyServiceTest {
         studiesDir = workDir.resolve("studies");
         service.createStudy(getStudyDefinition("TestStudy"));
         service.createStudy(getStudyDefinition("TestStudy2"));
-
-        assertEquals(List.of("TestStudy", "TestStudy2"), service.getStudyNames());
+        Set<String> studyNames = new HashSet<>(service.getStudyNames());
+        assertEquals(Set.of("TestStudy", "TestStudy2"), studyNames);
     }
 
     @Test
