@@ -45,19 +45,23 @@ Note that library names are case-sensitive!
     ``` json 
     {
       "bibEntries" : [ {
-          "entrytype" : "Article",
-          "citekey" : "Saha2018",
-          "author" : "Prashanta Saha and Upulee Kanewala",
-          "date" : "2018-02-20",
-          "keywords" : "cs.SE",
-          "title" : "Fault Detection Effectiveness of Source Test Case Generation Strategies"
+        "entryType" : "article",
+        "citationKey" : "Saha2017",
+        "author" : "Prashanta Saha and Upulee Kanewala",
+        "title" : "Fault Detection Effectiveness of Source Test Case Generation Strategies",
+        "date" : "2018-02-20"
       }, {
-          "entrytype" : "Article",
-          "citekey" : "Zhu2019",
-          "author" : "Hong Zhu and Ian Bayley and Dongmei Liu and Xiaoyu Zheng",
-          "date" : "2019-12-20",
-          "keywords" : "cs.SE",
-          "title" : "Morphy: A Datamorphic Software Test Automation Tool"
+        "entryType" : "article",
+        "citationKey" : "Wu2007",
+        "author" : "Cheng-Wen Wu",
+        "title" : "SOC Testing Methodology and Practice",
+        "date" : "2007-10-25"
+      }, {
+        "entryType" : "article",
+        "citationKey" : "Zhu2019",
+        "author" : "Hong Zhu and Ian Bayley and Dongmei Liu and Xiaoyu Zheng",
+        "title" : "Morphy: A Datamorphic Software Test Automation Tool",
+        "date" : "2019-12-20"
       } ]
     }
     ```
@@ -68,14 +72,11 @@ Note that citation keys are case-sensitive.
   - Example request body:
     ``` json 
     {
-      "entry": {
-          "entrytype":"Article",
-          "citekey":"Saha2017",
-          "author":"Prashanta Saha and Upulee Kanewala",
-          "date":"2018-02-20",
-          "keywords":"cs.SE",
-          "title":"Fault Detection Effectiveness of Source Test Case Generation Strategies"
-      }
+      "entryType" : "article",
+      "citationKey" : "Zhu2019",
+      "author" : "Hong Zhu and Ian Bayley and Dongmei Liu and Xiaoyu Zheng",
+      "title" : "Morphy: A Datamorphic Software Test Automation Tool",
+      "date" : "2019-12-20"
     }
     ```
 - **DELETE:** Delete the library with the provided name.
@@ -86,14 +87,11 @@ Note that citation keys are case-sensitive.
   - Example response:
     ``` json 
     {
-      "entry" : {
-          "entrytype" : "Article",
-          "citekey" : "Saha2018",
-          "author" : "Prashanta Saha and Upulee Kanewala",
-          "date" : "2018-02-20",
-          "keywords" : "cs.SE",
-          "title" : "Fault Detection Effectiveness of Source Test Case Generation Strategies"
-      }
+      "entryType" : "article",
+      "citationKey" : "Zhu2019",
+      "author" : "Hong Zhu and Ian Bayley and Dongmei Liu and Xiaoyu Zheng",
+      "title" : "Morphy: A Datamorphic Software Test Automation Tool",
+      "date" : "2019-12-20"
     }
     ```
 
@@ -103,14 +101,11 @@ Note that citation keys are case-sensitive.
   - Example request body:
     ``` json 
     {
-      "entry": {
-          "entrytype":"Article",
-          "citekey":"Saha2017",
-          "author":"Prashanta Saha and Upulee Kanewala",
-          "date":"2018-02-20",
-          "keywords":"cs.SE",
-          "title":"Fault Detection Effectiveness of Source Test Case Generation Strategies"
-      }
+      "entryType" : "article",
+      "citationKey" : "Zhu2019",
+      "author" : "Hong Zhu and Ian Bayley and Dongmei Liu and Xiaoyu Zheng",
+      "title" : "Morphy: A Datamorphic Software Test Automation Tool",
+      "date" : "2019-12-20"
     }
     ```
 - **DELETE:** Delete the entry with the provided citation key.

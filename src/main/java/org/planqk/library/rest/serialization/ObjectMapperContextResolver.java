@@ -1,15 +1,10 @@
 package org.planqk.library.rest.serialization;
 
-import org.jabref.model.entry.BibEntry;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
-import org.planqk.library.core.serialization.BibEntryJacksonDeserializer;
-import org.planqk.library.core.serialization.BibEntryJacksonSerializer;
 
 @Provider
 public class ObjectMapperContextResolver implements ContextResolver<ObjectMapper> {

@@ -41,10 +41,10 @@ public class Library {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<BibEntryDTO> getLibraryEntries() throws IOException {
+    public org.planqk.library.rest.model.Library getLibraryEntries() throws IOException {
         try {
             List<BibEntry> entries = libraryService.getLibraryEntries(libraryName);
-            return entries.parallelStream().map(BibEntryMapper::map).collect(Collectors.toList());
+            return new org.planqk.library.rest.model.Library(entries.parallelStream().map(BibEntryMapper::map).collect(Collectors.toList()));
         } catch (IOException e) {
             LOGGER.error("Error retrieving entries.", e);
             throw e;
