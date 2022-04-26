@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jakarta.ws.rs.NotFoundException;
 import org.jabref.model.entry.BibEntry;
 
 import jakarta.ws.rs.Consumes;
@@ -80,14 +81,13 @@ public class Library {
     @GET
     @Path("{citeKey}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBibEntryMatchingCiteKey(@PathParam("citeKey") String citeKey) throws IOException {
+    public BibEntryDTO getBibEntryMatchingCiteKey(@PathParam("citeKey") String citeKey) throws IOException {
         try {
             Optional<BibEntry> entry = libraryService.getLibraryEntryMatchingCiteKey(libraryName, citeKey);
             if (entry.isPresent()) {
-                return Response.ok(BibEntryMapper.map(entry.get()))
-                               .build();
+                return BibEntryMapper.map(entry.get());
             } else {
-                return Response.status(Response.Status.NOT_FOUND).build();
+                throw new NotFoundException();
             }
         } catch (IOException e) {
             LOGGER.error("Error finding matching entry.", e);
