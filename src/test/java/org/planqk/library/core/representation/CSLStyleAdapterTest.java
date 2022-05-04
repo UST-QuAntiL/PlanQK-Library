@@ -38,7 +38,7 @@ public class CSLStyleAdapterTest {
     public void registerCitationStyleFromFile() throws IOException, URISyntaxException {
         CitationStyle style = CSLStyleAdapter.getInstance().registerCitationStyleFromFile(citationFilePath.resolve("acm-sig-proceedings.csl").toString());
         assertEquals("ACM SIG Proceedings (\"et al.\" for 3+ authors)", style.getTitle());
-        assertEquals(getSource(), style.getSource());
+        assertEquals(getSource(), style.getSource().replaceAll("\r\n", "\n"));
     }
 
     @Test
@@ -246,6 +246,6 @@ public class CSLStyleAdapterTest {
                     </layout>
                   </bibliography>
                 </style>
-                """.replaceAll("\n", "\r\n");
+                """;
     }
 }
