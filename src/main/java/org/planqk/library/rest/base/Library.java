@@ -1,16 +1,17 @@
 package org.planqk.library.rest.base;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.NotFoundException;
 import org.jabref.model.entry.BibEntry;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -20,6 +21,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.planqk.library.core.properties.ServerPropertyService;
 import org.planqk.library.core.repository.LibraryService;
+import org.planqk.library.core.representation.CSLStyleAdapter;
 import org.planqk.library.core.serialization.BibEntryMapper;
 import org.planqk.library.rest.model.BibEntryDTO;
 import org.slf4j.Logger;
@@ -50,6 +52,13 @@ public class Library {
             LOGGER.error("Error retrieving entries.", e);
             throw e;
         }
+    }
+
+    @GET
+    @Path("styles")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<String> getCSLStyles() throws IOException, URISyntaxException {
+        return CSLStyleAdapter.getInstance().getRegisteredStyles();
     }
 
     @POST
@@ -95,11 +104,23 @@ public class Library {
         }
     }
 
-    // TODO:
-    //  The issue with this is still the fact that the cite key does not have to be unique, leading to unexpected behaviour.
-    //  This might be fixable using the ID field (if it is truly unique?), but this would require the ID field to be de-/marshalled.
-    //  But in the given implementation this was explicitly not done.
-    //  The reason for this is currently unclear? Maybe because these IDs are just volatile between executions, but would that result in a problem?
+    @GET
+    @Path("{citeKey}/{cslStyle}")
+    @Produces(MediaType.TEXT_HTML)
+    public String getBibEntryMatchingCiteKey(@PathParam("citeKey") String citeKey, @PathParam("cslStyle") String cslStyle) throws IOException, URISyntaxException {
+        try {
+            Optional<BibEntry> entry = libraryService.getLibraryEntryMatchingCiteKey(libraryName, citeKey);
+            if (entry.isPresent()) {
+                return CSLStyleAdapter.getInstance().generateCitation(entry.get(), cslStyle);
+            } else {
+                throw new NotFoundException();
+            }
+        } catch (IOException | URISyntaxException e) {
+            LOGGER.error("Error finding matching entry or generating the styled entry.", e);
+            throw e;
+        }
+    }
+
     @PUT
     @Path("{citeKey}")
     @Consumes(MediaType.APPLICATION_JSON)
