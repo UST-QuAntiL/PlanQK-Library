@@ -47,12 +47,7 @@ public class Libraries {
                            .entity("The given library name is taken.")
                            .build();
         }
-        try {
-            libraryService.createLibrary(newLibraryConfiguration);
-        } catch (IOException e) {
-            LOGGER.error("Error creating library.", e);
-            throw e;
-        }
+        libraryService.createLibrary(newLibraryConfiguration);
         return Response.ok()
                        .build();
     }

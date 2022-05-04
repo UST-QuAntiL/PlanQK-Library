@@ -90,7 +90,6 @@ public class LibraryService {
             throw new FileNotFoundException();
         }
         // Note that this might lead to issues if multiple entries have the same cite key!
-        // We do not need any update monitoring
         return OpenDatabase.loadDatabase(libraryPath, JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), new DummyFileUpdateMonitor())
                            .getDatabase()
                            .getEntryByCitationKey(citeKey);
@@ -98,15 +97,13 @@ public class LibraryService {
 
     public void addEntryToLibrary(String libraryName, BibEntry newEntry) throws IOException {
         // Enforce that a citation key is provided and that is is not part of the library already.
-        // TODO: Maybe generate citation key otherwise?
         if (newEntry.getCitationKey().isEmpty()) {
             throw new IllegalArgumentException("Entry does not contain a citation key");
         }
         Path libraryPath = getLibraryPath(libraryName);
         BibDatabaseContext context;
         if (!Files.exists(libraryPath)) {
-            Files.createFile(libraryPath);
-            context = new BibDatabaseContext(new BibDatabase());
+            throw new FileNotFoundException();
         } else {
             context = OpenDatabase.loadDatabase(libraryPath, JabRefPreferences.getInstance().getGeneralPreferences(), JabRefPreferences.getInstance().getImportFormatPreferences(), new DummyFileUpdateMonitor())
                                   .getDatabaseContext();
@@ -129,7 +126,6 @@ public class LibraryService {
 
     public void updateEntry(String libraryName, String citeKey, BibEntry updatedEntry) throws IOException {
         // Enforce that a citation key is provided and that is is not part of the library already.
-        // TODO: Maybe generate citation key otherwise?
         if (updatedEntry.getCitationKey().isEmpty()) {
             throw new IllegalArgumentException("Entry does not contain a citation key");
         }
