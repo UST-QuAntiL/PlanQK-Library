@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.jabref.logic.citationstyle.CitationStyle;
@@ -39,6 +38,12 @@ public class CSLStyleAdapterTest {
         CitationStyle style = CSLStyleAdapter.getInstance().registerCitationStyleFromFile(citationFilePath.resolve("acm-sig-proceedings.csl").toString());
         assertEquals("ACM SIG Proceedings (\"et al.\" for 3+ authors)", style.getTitle());
         assertEquals(getSource(), style.getSource().replaceAll("\r\n", "\n"));
+    }
+
+    @Test
+    public void styleEntryPlain() throws IOException, URISyntaxException {
+        String renderedEntry  = CSLStyleAdapter.getInstance().generatePlainCitation(getEntry(), "ACM SIGGRAPH");
+        System.out.println(renderedEntry);
     }
 
     @Test

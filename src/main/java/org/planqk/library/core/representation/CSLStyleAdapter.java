@@ -64,6 +64,15 @@ public class CSLStyleAdapter {
         return CitationStyleGenerator.generateCitation(entry, namesToStyles.getOrDefault(style, CitationStyle.getDefault()).getSource(), CitationStyleOutputFormat.HTML, new BibDatabaseContext(), new BibEntryTypesManager());
     }
 
+    /**
+     * @param entry Entry to be returned in the expected style
+     * @param style Expects a style from the list of styles returned by getRegisteredStyles()
+     * @return A styled Entry in HTML, if the style is not available use default style
+     */
+    public String generatePlainCitation(BibEntry entry, String style) {
+        return CitationStyleGenerator.generateCitation(entry, namesToStyles.getOrDefault(style, CitationStyle.getDefault()).getSource(), CitationStyleOutputFormat.TEXT, new BibDatabaseContext(), new BibEntryTypesManager());
+    }
+
     public List<String> getRegisteredStyles() {
         return new ArrayList<String>(namesToStyles.keySet());
     }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jabref.logic.importer.ParseException;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -83,8 +84,10 @@ public class Studies {
     }
 
     @POST
+    // Workaround to fix Tomcat CORS Filter issue with missing media type header: https://stackoverflow.com/questions/59204624/cors-failing-when-post-request-has-no-body-and-server-response-is-a-403-forbidde
+    @Consumes(MediaType.TEXT_PLAIN)
     @Path("{studyName}/crawl")
-    public void crawlStudy(@PathParam("studyName") String studyName) throws IOException, ParseException {
+    public void crawlStudy(@PathParam("studyName") String studyName, String unused) throws IOException, ParseException {
         try {
             // Note: This only starts a new crawl if no other crawl is currently running for this study
             studyService.startCrawl(studyName);
