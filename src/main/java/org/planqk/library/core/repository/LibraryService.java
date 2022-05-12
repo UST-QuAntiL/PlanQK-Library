@@ -95,7 +95,7 @@ public class LibraryService {
                            .getEntryByCitationKey(citeKey);
     }
 
-    public void addEntryToLibrary(String libraryName, BibEntry newEntry) throws IOException {
+    public synchronized void addEntryToLibrary(String libraryName, BibEntry newEntry) throws IOException {
         // Enforce that a citation key is provided and that is is not part of the library already.
         if (newEntry.getCitationKey().isEmpty()) {
             throw new IllegalArgumentException("Entry does not contain a citation key");
@@ -124,7 +124,7 @@ public class LibraryService {
         }
     }
 
-    public void updateEntry(String libraryName, String citeKey, BibEntry updatedEntry) throws IOException {
+    public synchronized void updateEntry(String libraryName, String citeKey, BibEntry updatedEntry) throws IOException {
         // Enforce that a citation key is provided and that is is not part of the library already.
         if (updatedEntry.getCitationKey().isEmpty()) {
             throw new IllegalArgumentException("Entry does not contain a citation key");
@@ -134,7 +134,7 @@ public class LibraryService {
         this.addEntryToLibrary(libraryName, updatedEntry);
     }
 
-    public boolean deleteEntryByCiteKey(String libraryName, String citeKey) throws IOException {
+    public synchronized boolean deleteEntryByCiteKey(String libraryName, String citeKey) throws IOException {
         Path libraryPath = getLibraryPath(libraryName);
         BibDatabaseContext context;
         if (!Files.exists(libraryPath)) {
