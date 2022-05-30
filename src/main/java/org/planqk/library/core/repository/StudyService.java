@@ -1,6 +1,8 @@
 package org.planqk.library.core.repository;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.jabref.logic.crawler.Crawler;
 import org.jabref.logic.crawler.StudyYamlParser;
+import org.jabref.logic.git.GitHandler;
 import org.jabref.logic.git.SlrGitHandler;
 import org.jabref.logic.importer.ParseException;
 import org.jabref.model.entry.BibEntryTypesManager;
@@ -38,7 +41,15 @@ public class StudyService {
         this.studiesDirectory = workingDirectory.resolve("studies");
         if (Files.notExists(studiesDirectory)) {
             try {
+                LOGGER.info(studiesDirectory.toString());
                 Files.createDirectories(studiesDirectory);
+                Map<String, String> env = new HashMap<>();
+                env.put("create", "true");
+                try {
+                    FileSystems.newFileSystem(GitHandler.class.getResource("git.gitignore").toURI(), env);
+                } catch (IOException | URISyntaxException e) {
+                    LOGGER.error("Setting up filesystem failed", e);
+                }
             } catch (IOException e) {
                 LOGGER.error("Could not create working directory.", e);
                 System.exit(1);
