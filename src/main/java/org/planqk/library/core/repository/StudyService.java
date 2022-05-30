@@ -46,7 +46,9 @@ public class StudyService {
                 Map<String, String> env = new HashMap<>();
                 env.put("create", "true");
                 try {
-                    FileSystems.newFileSystem(GitHandler.class.getResource("git.gitignore").toURI(), env);
+                    if (FileSystems.getFileSystem(GitHandler.class.getResource("git.gitignore").toURI()) == null) {
+                        FileSystems.newFileSystem(GitHandler.class.getResource("git.gitignore").toURI(), env);
+                    }
                 } catch (IOException | URISyntaxException e) {
                     LOGGER.error("Setting up filesystem failed", e);
                 }
