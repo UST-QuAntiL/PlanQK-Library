@@ -2,6 +2,7 @@ package org.planqk.library.core.repository;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,11 +47,11 @@ public class StudyService {
                 Map<String, String> env = new HashMap<>();
                 env.put("create", "true");
                 try {
-                    if (FileSystems.getFileSystem(GitHandler.class.getResource("git.gitignore").toURI()) == null) {
-                        FileSystems.newFileSystem(GitHandler.class.getResource("git.gitignore").toURI(), env);
-                    }
+                    FileSystems.newFileSystem(GitHandler.class.getResource("git.gitignore").toURI(), env);
                 } catch (IOException | URISyntaxException e) {
                     LOGGER.error("Setting up filesystem failed", e);
+                } catch (FileSystemAlreadyExistsException e) {
+                    LOGGER.info("Filesystem already exists");
                 }
             } catch (IOException e) {
                 LOGGER.error("Could not create working directory.", e);
