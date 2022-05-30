@@ -123,7 +123,7 @@ Note that citation keys are case-sensitive.
     ```
 
 - **POST:** Creates a new study defined by the study definition provided in the request body.
-  - Example request body:4
+  - Example request body:
     ``` json 
     {
       "studyDefinition": {
