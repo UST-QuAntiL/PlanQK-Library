@@ -3,9 +3,9 @@ package org.planqk.library.core.representation;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,6 @@ import org.jabref.model.database.BibDatabaseContext;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.BibEntryTypesManager;
 
-import org.planqk.library.rest.base.Library;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +36,8 @@ public class CSLStyleAdapter {
             FileSystems.newFileSystem(CitationStyle.class.getResource(STYLES_ROOT).toURI(), env);
         } catch (IOException | URISyntaxException e) {
             LOGGER.error("Setting up filesystem failed", e);
+        } catch (FileSystemAlreadyExistsException e) {
+            LOGGER.info("Filesystem already exists");
         }
     }
 
