@@ -46,4 +46,4 @@ PARTICULAR PURPOSE. You are solely responsible for determining the appropriatene
 SPDX-License-Identifier: MIT
 
    [Federal Ministry for Economic Affairs and Climate Action (BMWK)]: https://www.bmwk.de/EN
-   [PlanQK]: https://planqk.d
+   [PlanQK]: https://planqk.de
