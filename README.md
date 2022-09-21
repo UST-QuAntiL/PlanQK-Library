@@ -34,7 +34,8 @@ without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MER
 PARTICULAR PURPOSE. You are solely responsible for determining the appropriateness of using or redistributing the Work
 
 ## License
-SPDX-License-Identifier: Apache-2.0
+
+SPDX-License-Identifier: MIT
 
    [Federal Ministry for Economic Affairs and Climate Action (BMWK)]: https://www.bmwk.de/EN
    [PlanQK]: https://planqk.de
