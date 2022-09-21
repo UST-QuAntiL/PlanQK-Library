@@ -15,14 +15,6 @@ look into [Studies](#Studies).
 
 ## Libraries
 
-### How to serve a library
-
-Per default, the service looks for libraries and studies to serve in the ```user-home/planqk-library``` directory.
-It serves all libraries that are located directly in said directory.
-It serves all studies that are located within the studies folder in said directory.
-
-The default working directory can be changed by setting the ```LIBRARY_WORKSPACE``` environment variable to the desired path.
-
 ### **Path:** /libraries
 
 - **GET:** Provides a list of existing libraries within the working directory.

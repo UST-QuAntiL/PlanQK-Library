@@ -16,6 +16,14 @@ We use the Gitflow-Workflow as our Git-Workflow. A detailed description about th
 The PlanQK Library is built based on [Tomcat in version 10](https://tomcat.apache.org/download-10.cgi).
 Thus, earlier version will not be able to host the application since they are not using the Jakarta XML library.
 
+### How to serve a library
+
+Per default, the service looks for libraries and studies to serve in the ```user-home/planqk-library``` directory.
+It serves all libraries that are located directly in said directory.
+It serves all studies that are located within the studies folder in said directory.
+
+The default working directory can be changed by setting the ```LIBRARY_WORKSPACE``` environment variable to the desired path.
+
 ## Acknowledgements
 
 Current development is supported by the [Federal Ministry for Economic Affairs and Climate Action (BMWK)] as part of the [PlanQK] project (01MK20005N).
@@ -38,4 +46,4 @@ PARTICULAR PURPOSE. You are solely responsible for determining the appropriatene
 SPDX-License-Identifier: MIT
 
    [Federal Ministry for Economic Affairs and Climate Action (BMWK)]: https://www.bmwk.de/EN
-   [PlanQK]: https://planqk.de
+   [PlanQK]: https://planqk.d
