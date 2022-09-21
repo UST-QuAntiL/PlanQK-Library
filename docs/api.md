@@ -5,44 +5,46 @@ To create libraries or get a list of existing libraries look into [Libraries](#L
 To interact with a specific library, by creating, retrieving or modifying entries, look into [Library](#Library).
 
 To:
- - Create a new study
- - Get a list of existing studies
- - Start an automated search for a given study
- - Retrieve or interact with the results of a study
- 
+
+- Create a new study
+- Get a list of existing studies
+- Start an automated search for a given study
+- Retrieve or interact with the results of a study
+
 look into [Studies](#Studies).
 
 ## Libraries
 
 ### **Path:** /libraries
 
-
 - **GET:** Provides a list of existing libraries within the working directory.
   - Example response:
+
       ``` json
       {
           "libraryNames" : [ "arxiv.bib", "ieeexplore.bib" ]
       }
       ```
-- **POST:** Create a new library with the given name, provided in the request body, note that names have to be unique, 
-so names returned by the GET method above are not allowed and will result in an `HTTP 409 CONFLICT`. 
-    
-  - Expected request body for creating a library with the name `newLib`: 
-    ``` json 
+
+- **POST:** Create a new library with the given name, provided in the request body, note that names have to be unique,
+  so names returned by the GET method above are not allowed and will result in an `HTTP 409 CONFLICT`.
+  - Expected request body for creating a library with the name `newLib`:
+
+    ``` json
     {
         "libraryName" : "newLib"
     }
     ```
-  
+
 ## Library
 
 ### **Path:** /libraries/{libraryName}
 
-
 - **GET:** Returns all entries contained in the library with the provided name. Note that the bib file extension can be **omitted**.\
-Note that library names are case-sensitive!
+  Note that library names are case-sensitive!
   - Example response (note that there are many more possible fields such as `abstract`):
-    ``` json 
+
+    ``` json
     {
       "bibEntries" : [ {
         "entryType" : "article",
@@ -65,12 +67,13 @@ Note that library names are case-sensitive!
       } ]
     }
     ```
-    
-- **POST:** Adds a new entry provided in the request body to the library. 
-Note that the citation key in the provided must be non-blank and unique within the library. 
-Note that citation keys are case-sensitive.
+
+- **POST:** Adds a new entry provided in the request body to the library.
+  Note that the citation key in the provided must be non-blank and unique within the library.
+  Note that citation keys are case-sensitive.
   - Example request body:
-    ``` json 
+
+    ``` json
     {
       "entryType" : "article",
       "citationKey" : "Zhu2019",
@@ -79,13 +82,15 @@ Note that citation keys are case-sensitive.
       "date" : "2019-12-20"
     }
     ```
+
 - **DELETE:** Delete the library with the provided name.
 
 ### **Path:** /libraries/{libraryName}/{citeKey}
 
 - **GET:** Returns the entry with the provided citation key from in the library with the provided name. Note that citation keys are case-sensitive.
   - Example response:
-    ``` json 
+
+    ``` json
     {
       "entryType" : "article",
       "citationKey" : "Zhu2019",
@@ -95,11 +100,12 @@ Note that citation keys are case-sensitive.
     }
     ```
 
-- **PUT:** Updates the existing entry with the provided citation key with the entry provided in the request body. 
-Note that the citation key in the provided must be non-blank and unique within the library.
-Note that citation keys are case-sensitive.
+- **PUT:** Updates the existing entry with the provided citation key with the entry provided in the request body.
+  Note that the citation key in the provided must be non-blank and unique within the library.
+  Note that citation keys are case-sensitive.
   - Example request body:
-    ``` json 
+
+    ``` json
     {
       "entryType" : "article",
       "citationKey" : "Zhu2019",
@@ -108,6 +114,7 @@ Note that citation keys are case-sensitive.
       "date" : "2019-12-20"
     }
     ```
+
 - **DELETE:** Delete the entry with the provided citation key.
 
 ## Studies
@@ -116,7 +123,8 @@ Note that citation keys are case-sensitive.
 
 - **GET:** Returns a list of all studies within the studies' directory in the work-directory.
   - Example response:
-    ``` json 
+
+    ``` json
     {
       "studyNames" : [ "Study1", "Study2" ]
     }
@@ -124,7 +132,8 @@ Note that citation keys are case-sensitive.
 
 - **POST:** Creates a new study defined by the study definition provided in the request body.
   - Example request body:
-    ``` json 
+
+    ``` json
     {
       "studyDefinition": {
         "authors": [
@@ -156,18 +165,24 @@ Note that citation keys are case-sensitive.
       }
     }
     ```
+
 ### **Path:** /studies/{studyName}
+
 - **Delete:** Deletes the study and the corresponding directory.
 
 ### **Path:** /studies/{studyName}/results
+
 - This endpoint corresponds to the library endpoint with the libraryName being results, the same operations as there can be used.
 
 ### **Path:** /studies/{studyName}/crawl
+
 - **GET:** Returns whether a crawl is currently running for the specified study.
   - Example response:
+
     ```json
     {
       "currentlyCrawling" : false
     }
     ```
+
 - **POST:** Start a crawl session for the specified study. If there is already a crawl running, this operation does nothing.
