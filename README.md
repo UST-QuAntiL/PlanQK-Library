@@ -11,18 +11,28 @@ We use the Gitflow-Workflow as our Git-Workflow. A detailed description about th
 1. Run `gradle build` inside the root folder.
 2. When completed, the built product can be found in `build/libs/PlanQK Library-1.0-SNAPSHOT.war`.
 
-### Running and Development
+### Running using Tomcat
 
 The PlanQK Library is built based on [Tomcat in version 10](https://tomcat.apache.org/download-10.cgi).
 Thus, earlier version will not be able to host the application since they are not using the Jakarta XML library.
-
-### How to serve a library
 
 Per default, the service looks for libraries and studies to serve in the ```user-home/planqk-library``` directory.
 It serves all libraries that are located directly in said directory.
 It serves all studies that are located within the studies folder in said directory.
 
 The default working directory can be changed by setting the ```LIBRARY_WORKSPACE``` environment variable to the desired path.
+
+### Docker
+
+To run the server using docker run:
+
+```bash
+    docker build -t planqk/library:latest . 
+    docker run -p 2903:2903 -vc:\temp\bibs:/var/planqk-library/ --name PlanQKLibrary planqk/library:latest
+```
+
+Please change `c:\temp\bibs` to the folder where your bib files reside.
+Then you can access your bib files at <http://localhost:2903/libraries>.
 
 ## Acknowledgements
 
