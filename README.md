@@ -27,8 +27,8 @@ The default working directory can be changed by setting the ```LIBRARY_WORKSPACE
 To run the server using docker run:
 
 ```bash
-    docker build -t planqk/library:latest . 
-    docker run -p 2903:2903 -vc:\temp\bibs:/var/planqk-library/ --name PlanQKLibrary planqk/library:latest
+docker build -t planqk/library:latest . 
+docker run -p 2903:2903 -vc:\temp\bibs:/var/planqk-library/ --name PlanQKLibrary planqk/library:latest
 ```
 
 Please change `c:\temp\bibs` to the folder where your bib files reside.
